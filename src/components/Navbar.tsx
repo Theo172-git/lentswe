@@ -1,61 +1,73 @@
 import { useState } from "react";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import LentsweLogo from "./LentsweLogo";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navLinks = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Services", href: "#services" },
-    { name: "Team", href: "#team" },
-    { name: "Partners", href: "#partners" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Services", href: "/services" },
+    { name: "Team", href: "/team" },
+    { name: "Contact", href: "/contact" },
   ];
 
+  const isActive = (href: string) => {
+    if (href === "/") return location.pathname === "/";
+    return location.pathname.startsWith(href);
+  };
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border shadow-sm">
       <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#home" className="flex items-center gap-2">
-            <svg viewBox="0 0 100 80" className="w-10 h-10" fill="none">
+          <Link to="/" className="flex items-center gap-3">
+            <svg viewBox="0 0 100 80" className="w-12 h-12" fill="none">
               <path d="M50 5 L90 40 L50 75 L10 40 Z" className="stroke-primary" strokeWidth="4" fill="none" />
               <path d="M50 20 L70 40 L50 60 L30 40 Z" className="fill-secondary" />
             </svg>
-            <div className="hidden sm:block">
-              <span className="block text-sm font-bold text-primary tracking-wide leading-tight">LENTSWE</span>
-              <span className="block text-xs font-semibold text-secondary tracking-widest">HOLDING</span>
+            <div>
+              <span className="block text-lg font-extrabold text-primary tracking-wide leading-tight">LENTSWE</span>
+              <span className="block text-xs font-bold text-secondary tracking-[0.3em]">HOLDING</span>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
-                className="text-foreground/80 hover:text-primary font-medium transition-colors duration-300"
+                to={link.href}
+                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                  isActive(link.href)
+                    ? "text-primary bg-primary/10"
+                    : "text-foreground/70 hover:text-primary hover:bg-primary/5"
+                }`}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </div>
 
           {/* CTA Button */}
           <div className="hidden lg:flex items-center gap-4">
-            <Button variant="outline" size="default">
-              <Phone className="w-4 h-4" />
-              Get in Touch
-            </Button>
+            <Link to="/contact">
+              <Button variant="default" size="default" className="font-bold">
+                <Phone className="w-4 h-4" />
+                Get in Touch
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-foreground hover:text-primary transition-colors"
+            className="lg:hidden p-2 text-foreground hover:text-primary transition-colors rounded-lg hover:bg-primary/10"
             aria-label="Toggle menu"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -64,29 +76,36 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={`lg:hidden fixed inset-0 top-20 bg-background z-40 transform transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col p-8 space-y-6">
-          {navLinks.map((link, index) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className={`text-2xl font-semibold text-foreground hover:text-primary transition-colors animate-fade-in`}
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              {link.name}
-            </a>
-          ))}
-          <Button variant="default" size="lg" className="mt-8 w-full">
-            <Phone className="w-5 h-5" />
-            Get in Touch
-          </Button>
+      {isOpen && (
+        <div className="lg:hidden absolute top-20 left-0 right-0 bg-background border-b border-border shadow-xl">
+          <div className="container-custom py-6 space-y-2">
+            {navLinks.map((link, index) => (
+              <Link
+                key={link.name}
+                to={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`block px-4 py-3 rounded-xl font-semibold text-lg transition-all ${
+                  isActive(link.href)
+                    ? "text-primary bg-primary/10"
+                    : "text-foreground hover:text-primary hover:bg-primary/5"
+                }`}
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                {link.name}
+              </Link>
+            ))}
+            <div className="pt-4 border-t border-border">
+              <Link to="/contact" onClick={() => setIsOpen(false)}>
+                <Button variant="default" size="lg" className="w-full font-bold">
+                  <Phone className="w-5 h-5" />
+                  Get in Touch
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };
