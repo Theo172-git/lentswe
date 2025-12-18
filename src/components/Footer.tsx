@@ -1,42 +1,48 @@
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, MapPin, Phone, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-foreground text-background py-12 relative">
+    <footer className="bg-foreground text-background py-16 relative">
       <div className="container-custom">
-        <div className="grid md:grid-cols-4 gap-8 mb-12">
+        <div className="grid md:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <svg viewBox="0 0 100 80" className="w-10 h-10" fill="none">
+          <div className="md:col-span-1">
+            <Link to="/" className="flex items-center gap-3 mb-6">
+              <svg viewBox="0 0 100 80" className="w-12 h-12" fill="none">
                 <path d="M50 5 L90 40 L50 75 L10 40 Z" className="stroke-primary" strokeWidth="4" fill="none" />
                 <path d="M50 20 L70 40 L50 60 L30 40 Z" className="fill-secondary" />
               </svg>
               <div>
-                <span className="block text-sm font-bold text-primary tracking-wide leading-tight">LENTSWE</span>
-                <span className="block text-xs font-semibold text-secondary tracking-widest">HOLDING</span>
+                <span className="block text-lg font-extrabold text-primary tracking-wide leading-tight">LENTSWE</span>
+                <span className="block text-xs font-bold text-secondary tracking-[0.3em]">HOLDING</span>
               </div>
-            </div>
-            <p className="text-background/60 max-w-md">
-              Your trusted partner in materials handling, heavy machinery, transportation, and energy solutions. 
-              Building a safer, sustainable future together.
+            </Link>
+            <p className="text-background/60 text-sm leading-relaxed">
+              Your trusted partner in materials handling, heavy machinery, transportation, and energy solutions.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-background mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              {["Home", "About", "Services", "Team", "Contact"].map((link) => (
-                <li key={link}>
-                  <a
-                    href={`#${link.toLowerCase()}`}
-                    className="text-background/60 hover:text-primary transition-colors"
+            <h4 className="font-bold text-background text-lg mb-5">Quick Links</h4>
+            <ul className="space-y-3">
+              {[
+                { name: "Home", href: "/" },
+                { name: "About", href: "/about" },
+                { name: "Services", href: "/services" },
+                { name: "Team", href: "/team" },
+                { name: "Contact", href: "/contact" },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-background/60 hover:text-primary transition-colors font-medium"
                   >
-                    {link}
-                  </a>
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -44,8 +50,8 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h4 className="font-semibold text-background mb-4">Services</h4>
-            <ul className="space-y-2">
+            <h4 className="font-bold text-background text-lg mb-5">Services</h4>
+            <ul className="space-y-3">
               {[
                 "Materials Handling",
                 "Heavy Machinery",
@@ -53,30 +59,56 @@ const Footer = () => {
                 "Energy Solutions",
               ].map((service) => (
                 <li key={service}>
-                  <a
-                    href="#services"
-                    className="text-background/60 hover:text-primary transition-colors"
+                  <Link
+                    to="/services"
+                    className="text-background/60 hover:text-primary transition-colors font-medium"
                   >
                     {service}
-                  </a>
+                  </Link>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="font-bold text-background text-lg mb-5">Contact</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-background/60 text-sm">
+                  30 President Mbeki Drive<br />
+                  Rustenburg, 0300
+                </span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-primary flex-shrink-0" />
+                <a href="tel:+27145921561" className="text-background/60 hover:text-primary transition-colors text-sm">
+                  +27 (0) 14 592 1561
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-primary flex-shrink-0" />
+                <a href="mailto:info@lentsweholding.co.za" className="text-background/60 hover:text-primary transition-colors text-sm">
+                  info@lentsweholding.co.za
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-background/10">
-          <p className="text-background/60 text-sm">
+          <p className="text-background/60 text-sm font-medium">
             © {currentYear} Lentswe Holding. All rights reserved.
           </p>
-          <a
-            href="#home"
-            className="flex items-center gap-2 text-background/60 hover:text-primary transition-colors mt-4 md:mt-0"
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center gap-2 text-background/60 hover:text-primary transition-colors mt-4 md:mt-0 font-medium"
           >
             Back to top
             <ArrowUp className="w-4 h-4" />
-          </a>
+          </button>
         </div>
       </div>
     </footer>

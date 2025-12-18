@@ -1,5 +1,6 @@
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -16,11 +17,11 @@ const HeroSection = () => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20 mb-8 animate-fade-in">
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-primary">Sustainable Solutions Provider</span>
+            <span className="text-sm font-bold text-primary tracking-wide">Sustainable Solutions Provider</span>
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-primary-foreground leading-tight mb-6 animate-fade-in-up">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-primary-foreground leading-tight mb-6 animate-fade-in-up tracking-tight">
             Powering Progress with{" "}
             <span className="text-gradient">Sustainable</span>{" "}
             Solutions
@@ -34,13 +35,17 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in-up animation-delay-300">
-            <Button variant="hero" size="xl">
-              Explore Our Services
-              <ArrowRight className="w-5 h-5" />
-            </Button>
-            <Button variant="heroOutline" size="xl">
-              Contact Us
-            </Button>
+            <Link to="/services">
+              <Button variant="hero" size="xl" className="font-bold">
+                Explore Our Services
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </Link>
+            <Link to="/contact">
+              <Button variant="heroOutline" size="xl" className="font-bold">
+                Contact Us
+              </Button>
+            </Link>
           </div>
 
           {/* Stats */}
@@ -52,8 +57,8 @@ const HeroSection = () => {
               { value: "100%", label: "Client Satisfaction" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary mb-1">{stat.value}</div>
-                <div className="text-sm text-primary-foreground/60">{stat.label}</div>
+                <div className="text-3xl md:text-4xl font-extrabold text-primary mb-1">{stat.value}</div>
+                <div className="text-sm font-medium text-primary-foreground/60">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -62,10 +67,10 @@ const HeroSection = () => {
 
       {/* Scroll indicator */}
       <a
-        href="#about"
+        href="#services"
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-primary-foreground/50 hover:text-primary transition-colors animate-bounce"
       >
-        <span className="text-xs uppercase tracking-widest">Scroll</span>
+        <span className="text-xs uppercase tracking-widest font-bold">Scroll</span>
         <ChevronDown className="w-5 h-5" />
       </a>
     </section>
