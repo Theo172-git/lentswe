@@ -1,38 +1,67 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
-import { ArrowRight, Forklift, Truck, Fuel, Construction, Eye, Target, Shield, Award, Heart, Lightbulb } from "lucide-react";
+import ExpandableCard from "@/components/ExpandableCard";
+import { ArrowRight, Forklift, Truck, Fuel, Construction, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import forkliftImg from "@/assets/forklift-warehouse.jpg";
+import machineryImg from "@/assets/heavy-machinery.jpg";
+import transportImg from "@/assets/transport-truck.jpg";
+import energyImg from "@/assets/energy-lpg.jpg";
 
 const services = [
   {
-    icon: Forklift,
     title: "Materials Handling",
-    description: "Comprehensive forklift solutions tailored to your specifications",
-    gradient: "from-teal to-primary",
-    bgGradient: "from-teal/15 via-card to-primary/10",
+    subtitle: "Forklift Solutions",
+    description: "Comprehensive forklift solutions tailored to your specifications. From monthly to long-term rentals, we provide the equipment you need.",
+    gradient: "from-rose-500 to-pink-600",
+    image: forkliftImg,
+    features: ["Custom specifications", "Long-term rentals", "New procurement"],
   },
   {
-    icon: Construction,
     title: "Heavy Machinery",
-    description: "Custom machinery solutions for your construction projects",
-    gradient: "from-secondary to-accent",
-    bgGradient: "from-secondary/15 via-card to-accent/10",
+    subtitle: "Earth Moving",
+    description: "Custom machinery solutions for your construction projects. Based on customer needs and specifications.",
+    gradient: "from-teal to-emerald-500",
+    image: machineryImg,
+    features: ["Project-based rentals", "Operator training", "Maintenance included"],
   },
   {
-    icon: Truck,
     title: "Transportation",
-    description: "Local minerals transportation and logistics solutions",
-    gradient: "from-primary to-teal-light",
-    bgGradient: "from-primary/15 via-card to-teal-light/10",
+    subtitle: "Logistics Solutions",
+    description: "Local minerals transportation and logistics solutions designed around your operational requirements.",
+    gradient: "from-violet-500 to-purple-600",
+    image: transportImg,
+    features: ["Minerals transport", "Fleet management", "Custom logistics"],
   },
   {
-    icon: Fuel,
     title: "Energy Solutions",
-    description: "Environmentally friendly LPG gas supply",
-    gradient: "from-accent to-secondary",
-    bgGradient: "from-accent/15 via-card to-secondary/10",
+    subtitle: "LPG Supply",
+    description: "Environmentally friendly LPG gas supply for sustainable energy needs with reliable delivery.",
+    gradient: "from-amber-500 to-orange-600",
+    image: energyImg,
+    features: ["Sustainable energy", "Reliable delivery", "Competitive pricing"],
+  },
+];
+
+const faqs = [
+  {
+    question: "What areas do you service?",
+    answer: "We primarily service the North West Province of South Africa, with our headquarters in Rustenburg. We can accommodate projects across Southern Africa.",
+  },
+  {
+    question: "How do I request a quote?",
+    answer: "You can request a quote by contacting us via phone, email, or through our contact form. We'll respond within 24 business hours with a personalized quote.",
+  },
+  {
+    question: "Do you offer long-term rental agreements?",
+    answer: "Yes, we offer flexible rental agreements ranging from monthly to multi-year contracts, tailored to your project requirements.",
+  },
+  {
+    question: "What types of forklifts do you provide?",
+    answer: "We provide a wide range of forklifts including electric, diesel, and LPG models, from compact warehouse units to heavy-duty industrial equipment.",
   },
 ];
 
@@ -42,120 +71,131 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       
-      {/* Services Preview */}
+      {/* Services Section with Expandable Cards */}
       <section className="section-padding bg-background relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 blob-shape" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blob-shape" />
         
         <div className="container-custom relative z-10">
           <div className="text-center mb-16">
-            <span className="text-sm font-bold text-primary uppercase tracking-widest mb-4 block">
-              What We Offer
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-4">
+            <span className="section-subtitle">What We Offer</span>
+            <h2 className="section-title mb-6">
               Our <span className="text-gradient">Services</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="section-description">
               Comprehensive solutions designed for modern industry
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
             {services.map((service, index) => (
-              <div
+              <ExpandableCard
                 key={index}
-                className={`group relative bg-gradient-to-br ${service.bgGradient} rounded-3xl p-6 shadow-card hover:shadow-glow transition-all duration-500 border border-border hover:border-primary/30 hover:-translate-y-2 overflow-hidden`}
+                title={service.title}
+                subtitle={service.subtitle}
+                description={service.description}
+                gradient={service.gradient}
+                image={service.image}
               >
-                <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br ${service.gradient} opacity-20 rounded-bl-full`} />
-                
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  <service.icon className="w-7 h-7 text-primary-foreground" />
-                </div>
-                <h3 className="text-lg font-extrabold text-foreground mb-2">{service.title}</h3>
-                <p className="text-sm text-muted-foreground">{service.description}</p>
-              </div>
+                <ul className="space-y-3">
+                  {service.features.map((feature, fIndex) => (
+                    <li key={fIndex} className="flex items-center gap-3 text-white/90 text-lg font-medium">
+                      <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                        <Check className="w-4 h-4" />
+                      </span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <Link to="/services" className="inline-block mt-6">
+                  <Button variant="secondary" size="lg" className="font-bold bg-white/20 hover:bg-white/30 text-white border-0">
+                    Learn More
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </Link>
+              </ExpandableCard>
             ))}
           </div>
 
           <div className="text-center">
             <Link to="/services">
-              <Button variant="default" size="lg" className="font-bold">
+              <Button variant="default" size="xl" className="font-black text-lg">
                 View All Services
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-6 h-6" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* About Preview */}
+      {/* About Preview with Accordion */}
       <section className="section-padding bg-muted/30 relative overflow-hidden">
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 blob-shape-2" />
         
         <div className="container-custom relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <span className="text-sm font-bold text-primary uppercase tracking-widest mb-4 block">
-                About Us
-              </span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6">
+              <span className="section-subtitle">About Us</span>
+              <h2 className="section-title mb-8">
                 Building <span className="text-gradient">Sustainable</span> Futures
               </h2>
-              <p className="text-lg text-muted-foreground mb-8">
+              <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
                 Lentswe Holding envisions a future where our personalized approach to materials handling 
                 is both safe and sustainable for the community, suppliers and the employees we interact with.
               </p>
               <Link to="/about">
-                <Button variant="default" size="lg" className="font-bold">
+                <Button variant="default" size="xl" className="font-black text-lg">
                   Learn More About Us
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-6 h-6" />
                 </Button>
               </Link>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: Eye, title: "Vision", gradient: "from-teal to-primary" },
-                { icon: Target, title: "Mission", gradient: "from-secondary to-accent" },
-                { icon: Shield, title: "Safety", gradient: "from-primary to-teal-light" },
-                { icon: Award, title: "Excellence", gradient: "from-accent to-secondary" },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="group p-6 rounded-2xl bg-gradient-to-br from-card to-muted/50 border border-border hover:border-primary/30 hover:shadow-glow transition-all duration-300 text-center"
-                >
-                  <div className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-lg`}>
-                    <item.icon className="w-6 h-6 text-primary-foreground" />
-                  </div>
-                  <h4 className="font-bold text-foreground">{item.title}</h4>
-                </div>
-              ))}
+            {/* FAQ Accordion */}
+            <div className="bg-card rounded-3xl p-8 shadow-card border border-border">
+              <h3 className="text-2xl font-black text-foreground mb-6">Frequently Asked Questions</h3>
+              <Accordion type="single" collapsible className="space-y-4">
+                {faqs.map((faq, index) => (
+                  <AccordionItem 
+                    key={index} 
+                    value={`faq-${index}`}
+                    className="border border-border rounded-2xl px-6 overflow-hidden bg-background/50"
+                  >
+                    <AccordionTrigger className="text-lg font-bold text-foreground hover:no-underline py-5">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-base pb-5">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-hero relative overflow-hidden">
+      <section className="py-28 bg-gradient-hero relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blob-shape animate-blob" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary/10 blob-shape-2" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 blob-shape animate-blob" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/10 blob-shape-2" />
         </div>
         <div className="container-custom relative z-10 text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary-foreground mb-6">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground mb-8">
             Ready to Get <span className="text-gradient">Started?</span>
           </h2>
-          <p className="text-xl text-primary-foreground/70 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-primary-foreground/70 mb-12 max-w-2xl mx-auto">
             Contact us today to discuss your requirements and get a personalized quote
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link to="/contact">
-              <Button variant="hero" size="xl" className="font-bold">
+              <Button variant="hero" size="xl" className="font-black text-lg">
                 Contact Us Now
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-6 h-6" />
               </Button>
             </Link>
             <Link to="/services">
-              <Button variant="heroOutline" size="xl" className="font-bold">
+              <Button variant="heroOutline" size="xl" className="font-black text-lg">
                 View Services
               </Button>
             </Link>
