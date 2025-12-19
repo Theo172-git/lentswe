@@ -10,6 +10,30 @@ import forkliftImg from "@/assets/forklift-warehouse.jpg";
 import machineryImg from "@/assets/heavy-machinery.jpg";
 import transportImg from "@/assets/transport-truck.jpg";
 import energyImg from "@/assets/energy-lpg.jpg";
+import driver1Img from "@/assets/driver-forklift-1.jpg";
+import driver2Img from "@/assets/driver-forklift-2.jpg";
+import driver3Img from "@/assets/driver-forklift-3.jpg";
+
+const teamMembers = [
+  {
+    name: "Our Skilled Operators",
+    role: "Expert Forklift Drivers",
+    image: driver1Img,
+    gradient: "from-blue-500 to-cyan-500",
+  },
+  {
+    name: "Dedicated Workforce",
+    role: "Professional Handlers",
+    image: driver2Img,
+    gradient: "from-emerald-500 to-green-500",
+  },
+  {
+    name: "Excellence in Action",
+    role: "Safety First Team",
+    image: driver3Img,
+    gradient: "from-orange-500 to-amber-500",
+  },
+];
 
 const services = [
   {
@@ -70,6 +94,42 @@ const Index = () => {
     <main className="min-h-screen">
       <Navbar />
       <HeroSection />
+
+      {/* Team/Drivers Section */}
+      <section className="section-padding bg-muted/20 relative overflow-hidden">
+        <div className="container-custom relative z-10">
+          <div className="text-center mb-12">
+            <span className="section-subtitle">Our People</span>
+            <h2 className="section-title mb-6">
+              Meet Our <span className="text-gradient">Team</span>
+            </h2>
+            <p className="section-description">
+              Skilled professionals dedicated to excellence
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {teamMembers.map((member, index) => (
+              <div
+                key={index}
+                className="group relative rounded-3xl overflow-hidden shadow-card hover:shadow-glow transition-all duration-500"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${member.gradient} opacity-90`} />
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="w-full h-80 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 className="text-2xl font-black mb-1">{member.name}</h3>
+                  <p className="text-white/80 font-semibold text-lg">{member.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       
       {/* Services Section with Expandable Cards */}
       <section className="section-padding bg-background relative overflow-hidden">
