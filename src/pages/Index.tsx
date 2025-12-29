@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
 import ExpandableCard from "@/components/ExpandableCard";
+import PartnersSection from "@/components/PartnersSection";
 import { ArrowRight, Forklift, Truck, Fuel, Construction, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -221,6 +222,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Partners Section */}
+      <PartnersSection />
 
       {/* CTA Section */}
       <section className="py-28 bg-gradient-hero relative overflow-hidden">

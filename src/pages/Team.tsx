@@ -1,7 +1,8 @@
-import { Linkedin, Mail, Phone, Award, Users, Target, Briefcase } from "lucide-react";
+import { Award, Users, Target, Briefcase } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ExpandableCard from "@/components/ExpandableCard";
+import PartnersSection from "@/components/PartnersSection";
 import mpapiImg from "@/assets/mpapi-tsomele.png";
 import reabetsweImg from "@/assets/reabetswe-liale.png";
 
@@ -13,7 +14,6 @@ const teamMembers = [
     bio: "A visionary leader with over a decade of experience in the materials handling industry, driving sustainable growth and innovation.",
     image: reabetsweImg,
     gradient: "from-teal to-emerald-500",
-    email: "reabetswe@lentsweholding.co.za",
   },
   {
     name: "Mpapi Tsomele",
@@ -22,7 +22,6 @@ const teamMembers = [
     bio: "Technical expert overseeing all engineering operations and ensuring the highest standards of equipment performance and safety.",
     image: mpapiImg,
     gradient: "from-violet-500 to-purple-600",
-    email: "mpapi@lentsweholding.co.za",
   },
 ];
 
@@ -75,14 +74,7 @@ const Team = () => {
                     />
                   </div>
                   <div>
-                    <p className="text-white/90 text-lg leading-relaxed mb-4">{member.bio}</p>
-                    <a 
-                      href={`mailto:${member.email}`}
-                      className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors font-semibold"
-                    >
-                      <Mail className="w-5 h-5" />
-                      {member.email}
-                    </a>
+                    <p className="text-white/90 text-lg leading-relaxed">{member.bio}</p>
                   </div>
                 </div>
               </ExpandableCard>
@@ -111,6 +103,9 @@ const Team = () => {
           </div>
         </div>
       </section>
+
+      {/* Partners Section */}
+      <PartnersSection />
 
       <Footer />
     </main>
