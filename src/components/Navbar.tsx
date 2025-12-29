@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Menu, X, Phone, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import logoImg from "@/assets/lentswe-logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,14 +27,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <svg viewBox="0 0 100 80" className="w-12 h-12" fill="none">
-              <path d="M50 5 L90 40 L50 75 L10 40 Z" className="stroke-primary" strokeWidth="4" fill="none" />
-              <path d="M50 20 L70 40 L50 60 L30 40 Z" className="fill-secondary" />
-            </svg>
-            <div>
-              <span className="block text-lg font-extrabold text-primary tracking-wide leading-tight">LENTSWE</span>
-              <span className="block text-xs font-bold text-secondary tracking-[0.3em]">HOLDING</span>
-            </div>
+            <img src={logoImg} alt="Lentswe Holding" className="h-14 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
