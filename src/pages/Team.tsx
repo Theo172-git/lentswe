@@ -2,14 +2,16 @@ import { Linkedin, Mail, Phone, Award, Users, Target, Briefcase } from "lucide-r
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ExpandableCard from "@/components/ExpandableCard";
+import mpapiImg from "@/assets/mpapi-tsomele.png";
+import reabetsweImg from "@/assets/reabetswe-liale.png";
 
 const teamMembers = [
   {
-    name: "Reabetswe Llale",
+    name: "Reabetswe Liale",
     role: "Director",
     position: "Managing Director & CEO",
     bio: "A visionary leader with over a decade of experience in the materials handling industry, driving sustainable growth and innovation.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    image: reabetsweImg,
     gradient: "from-teal to-emerald-500",
     email: "reabetswe@lentsweholding.co.za",
   },
@@ -18,7 +20,7 @@ const teamMembers = [
     role: "Director",
     position: "Chief of Engineering & Technology",
     bio: "Technical expert overseeing all engineering operations and ensuring the highest standards of equipment performance and safety.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    image: mpapiImg,
     gradient: "from-violet-500 to-purple-600",
     email: "mpapi@lentsweholding.co.za",
   },
