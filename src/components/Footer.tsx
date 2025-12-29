@@ -1,5 +1,6 @@
 import { ArrowUp, MapPin, Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import logoImg from "@/assets/lentswe-logo.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -11,14 +12,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-6">
-              <svg viewBox="0 0 100 80" className="w-12 h-12" fill="none">
-                <path d="M50 5 L90 40 L50 75 L10 40 Z" className="stroke-primary" strokeWidth="4" fill="none" />
-                <path d="M50 20 L70 40 L50 60 L30 40 Z" className="fill-secondary" />
-              </svg>
-              <div>
-                <span className="block text-lg font-extrabold text-primary tracking-wide leading-tight">LENTSWE</span>
-                <span className="block text-xs font-bold text-secondary tracking-[0.3em]">HOLDING</span>
-              </div>
+              <img src={logoImg} alt="Lentswe Holding" className="h-14 w-auto" />
             </Link>
             <p className="text-background/60 text-sm leading-relaxed">
               Your trusted partner in materials handling, heavy machinery, transportation, and energy solutions.
@@ -77,21 +71,26 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <span className="text-background/60 text-sm">
-                  30 President Mbeki Drive<br />
-                  Rustenburg, 0300
+                  4 Kuerboom Street<br />
+                  Geelhoutpark, Rustenburg, 0300
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="tel:+27145921561" className="text-background/60 hover:text-primary transition-colors text-sm">
-                  +27 (0) 14 592 1561
+                <a href="tel:+27658795912" className="text-background/60 hover:text-primary transition-colors text-sm">
+                  +27 65 879 5912
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="mailto:info@lentsweholding.co.za" className="text-background/60 hover:text-primary transition-colors text-sm">
-                  info@lentsweholding.co.za
-                </a>
+              <li className="flex items-start gap-3">
+                <Mail className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <a href="mailto:Info@Lentsweholding.com" className="text-background/60 hover:text-primary transition-colors text-sm">
+                    Info@Lentsweholding.com
+                  </a>
+                  <a href="mailto:Accounts@Lentsweholding.com" className="text-background/60 hover:text-primary transition-colors text-sm">
+                    Accounts@Lentsweholding.com
+                  </a>
+                </div>
               </li>
             </ul>
           </div>

@@ -1,17 +1,19 @@
 import { Linkedin, Mail } from "lucide-react";
+import mpapiImg from "@/assets/mpapi-tsomele.png";
+import reabetsweImg from "@/assets/reabetswe-liale.png";
 
 const teamMembers = [
   {
-    name: "Reabetswe Llale",
+    name: "Reabetswe Liale",
     role: "Director",
     position: "Managing Director & CEO",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    image: reabetsweImg,
   },
   {
     name: "Mpapi Tsomele",
     role: "Director",
     position: "Chief of Engineering & Technology",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    image: mpapiImg,
   },
 ];
 
