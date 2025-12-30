@@ -85,7 +85,7 @@ const faqs = [
 
 const Index = () => {
   return (
-    <main className="min-h-screen">
+    <main id="main-content" className="min-h-screen">
       <Navbar />
       <HeroSection />
 
