@@ -3,7 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
 import ExpandableCard from "@/components/ExpandableCard";
 import PartnersSection from "@/components/PartnersSection";
-import { ArrowRight, Forklift, Truck, Fuel, Construction, Check } from "lucide-react";
+import { ArrowRight, Forklift, Truck, Fuel, Construction, Check, Settings, Shield, Clock, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -18,6 +18,9 @@ import portfolio4 from "@/assets/portfolio-4.jpg";
 import portfolio5 from "@/assets/portfolio-5.jpg";
 import portfolio6 from "@/assets/portfolio-6.jpg";
 import portfolio7 from "@/assets/portfolio-7.jpg";
+import driverForklift1 from "@/assets/driver-forklift-1.jpg";
+import driverForklift2 from "@/assets/driver-forklift-2.jpg";
+import driverForklift3 from "@/assets/driver-forklift-3.jpg";
 
 const portfolioImages = [
   { src: portfolio1, alt: "Lentswe Operations 1" },
@@ -27,6 +30,42 @@ const portfolioImages = [
   { src: portfolio5, alt: "Lentswe Operations 5" },
   { src: portfolio6, alt: "Lentswe Operations 6" },
   { src: portfolio7, alt: "Lentswe Operations 7" },
+];
+
+const forkliftSolutions = [
+  {
+    title: "Short-Term Rental",
+    description: "Flexible daily, weekly, or monthly forklift rentals for seasonal demands or project peaks.",
+    icon: Clock,
+    cta: "Get Rental Quote",
+  },
+  {
+    title: "Long-Term Lease",
+    description: "Cost-effective multi-year agreements with maintenance included. Reduce overhead, maximize uptime.",
+    icon: Shield,
+    cta: "Explore Lease Options",
+  },
+  {
+    title: "Custom Procurement",
+    description: "Need specific specs? We source and deliver forklifts tailored to your exact operational requirements.",
+    icon: Settings,
+    cta: "Request Specifications",
+  },
+  {
+    title: "Maintenance & Support",
+    description: "24/7 breakdown support, scheduled servicing, and operator training to keep your fleet running.",
+    icon: Wrench,
+    cta: "View Support Plans",
+  },
+];
+
+const forkliftShowcase = [
+  { src: portfolio1, label: "Warehouse Operations" },
+  { src: portfolio3, label: "Loading & Unloading" },
+  { src: portfolio5, label: "Industrial Handling" },
+  { src: driverForklift1, label: "Skilled Operators" },
+  { src: driverForklift2, label: "Safety First" },
+  { src: portfolio7, label: "Heavy Duty Fleet" },
 ];
 
 const services = [
@@ -114,6 +153,98 @@ const Index = () => {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Forklift Solutions Section */}
+      <section className="section-padding bg-background relative overflow-hidden">
+        <div className="absolute top-20 left-0 w-72 h-72 bg-primary/5 blob-shape-2" />
+        <div className="absolute bottom-10 right-0 w-96 h-96 bg-secondary/5 blob-shape" />
+        
+        <div className="container-custom relative z-10">
+          <div className="text-center mb-16">
+            <span className="section-subtitle">Core Expertise</span>
+            <h2 className="section-title mb-6">
+              Forklift <span className="text-gradient">Solutions</span>
+            </h2>
+            <p className="section-description max-w-3xl mx-auto">
+              From short-term rentals to full fleet management — we deliver the right forklift solution for your business needs
+            </p>
+          </div>
+
+          {/* Solutions Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            {forkliftSolutions.map((solution, index) => (
+              <div
+                key={index}
+                className="group bg-card border border-border rounded-2xl p-6 hover:shadow-glow hover:border-primary/30 transition-all duration-300 hover-lift"
+              >
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <solution.icon className="w-7 h-7 text-primary-foreground" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-3">{solution.title}</h3>
+                <p className="text-muted-foreground mb-5 leading-relaxed">{solution.description}</p>
+                <Link to="/contact">
+                  <Button variant="ghost" className="p-0 h-auto font-semibold text-primary hover:text-primary/80 group/btn">
+                    {solution.cta}
+                    <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* Showcase Gallery */}
+          <div className="bg-muted/30 rounded-3xl p-8 md:p-10 border border-border">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+              <div>
+                <h3 className="text-2xl font-black text-foreground mb-2">Our Fleet in Action</h3>
+                <p className="text-muted-foreground">See our equipment and operators delivering excellence across industries</p>
+              </div>
+              <Link to="/services">
+                <Button variant="default" className="font-bold">
+                  View Full Fleet
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {forkliftShowcase.map((item, index) => (
+                <div
+                  key={index}
+                  className="group relative rounded-xl overflow-hidden aspect-[4/3] shadow-card hover:shadow-glow transition-all duration-500"
+                >
+                  <img
+                    src={item.src}
+                    alt={item.label}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <span className="inline-block px-3 py-1 bg-primary/90 text-primary-foreground text-sm font-semibold rounded-full">
+                      {item.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats Bar */}
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { value: "50+", label: "Forklifts Available" },
+              { value: "24/7", label: "Support Coverage" },
+              { value: "15+", label: "Years Experience" },
+              { value: "100%", label: "Client Satisfaction" },
+            ].map((stat, index) => (
+              <div key={index} className="text-center p-6 bg-card rounded-2xl border border-border hover-lift transition-all duration-300">
+                <div className="text-3xl md:text-4xl font-black text-gradient mb-2">{stat.value}</div>
+                <div className="text-muted-foreground font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
