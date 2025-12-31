@@ -56,14 +56,14 @@ const Team = () => {
         <div className="container-custom relative z-10">
           {/* Team Grid */}
           <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto mb-24">
-            {teamMembers.map((member, index) => (
+          {teamMembers.map((member, index) => (
               <ExpandableCard
                 key={index}
                 title={member.name}
                 subtitle={member.role}
                 description={member.position}
                 gradient={member.gradient}
-                defaultOpen={index === 1}
+                defaultOpen={true}
               >
                 <div className="flex items-start gap-6">
                   <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-white/30 flex-shrink-0">
@@ -84,10 +84,10 @@ const Team = () => {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { icon: Award, value: "10+", label: "Years Experience", gradient: "from-teal to-emerald-500" },
-              { icon: Users, value: "50+", label: "Happy Clients", gradient: "from-rose-500 to-pink-600" },
-              { icon: Target, value: "100+", label: "Projects Completed", gradient: "from-violet-500 to-purple-600" },
-              { icon: Briefcase, value: "100%", label: "Client Satisfaction", gradient: "from-amber-500 to-orange-600" },
+              { icon: Award, value: "3+", label: "Years Experience", gradient: "from-teal to-emerald-500" },
+              { icon: Users, value: "10+", label: "Happy Clients", gradient: "from-rose-500 to-pink-600" },
+              { icon: Target, value: "98%", label: "SLA Execution Rate", gradient: "from-violet-500 to-purple-600" },
+              { icon: Briefcase, value: "24/7", label: "Breakdown Support", gradient: "from-amber-500 to-orange-600" },
             ].map((stat, index) => (
               <div
                 key={index}
