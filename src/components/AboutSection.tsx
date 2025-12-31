@@ -1,4 +1,4 @@
-import { Target, Eye, Shield, Users } from "lucide-react";
+import { Target, Eye, Shield, Users, Leaf, Recycle } from "lucide-react";
 
 const AboutSection = () => {
   return (
@@ -54,6 +54,42 @@ const AboutSection = () => {
           </div>
         </div>
 
+        {/* Environmental Commitment */}
+        <div className="mb-20 bg-gradient-to-br from-emerald-500/10 via-teal/5 to-primary/10 rounded-3xl p-8 md:p-12 border border-emerald-500/20">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-shrink-0">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-500 to-teal flex items-center justify-center shadow-lg">
+                <Leaf className="w-12 h-12 text-white" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                Our <span className="text-emerald-500">Environmental</span> Commitment
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                At Lentswe Holding, sustainability isn't just a goal—it's our core operating principle. 
+                We prioritize environmentally friendly machinery, including electric and LPG-powered forklifts 
+                that significantly reduce carbon emissions compared to traditional diesel equipment.
+              </p>
+              <ul className="grid sm:grid-cols-2 gap-3">
+                {[
+                  "Electric forklift fleet reducing emissions",
+                  "LPG energy solutions for cleaner operations",
+                  "Carbon footprint tracking & reduction",
+                  "Sustainable equipment maintenance practices",
+                  "Eco-conscious supply chain partnerships",
+                  "Green technology investments",
+                ].map((item, index) => (
+                  <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
         {/* Core Values */}
         <div className="text-center mb-12">
           <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Our Core Values</h3>
@@ -70,9 +106,9 @@ const AboutSection = () => {
               description: "Prioritizing the wellbeing of our team and clients in every operation",
             },
             {
-              icon: Target,
-              title: "Excellence",
-              description: "Delivering exceptional quality in all our services and solutions",
+              icon: Leaf,
+              title: "Sustainability",
+              description: "Committed to eco-friendly solutions that protect our environment",
             },
             {
               icon: Users,
@@ -80,9 +116,9 @@ const AboutSection = () => {
               description: "Building lasting relationships through trust and collaboration",
             },
             {
-              icon: Eye,
-              title: "Innovation",
-              description: "Embracing sustainable technologies for a better tomorrow",
+              icon: Recycle,
+              title: "Green Innovation",
+              description: "Embracing clean technologies for a sustainable tomorrow",
             },
           ].map((value, index) => (
             <div

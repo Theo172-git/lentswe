@@ -242,7 +242,7 @@ const Index = () => {
             {[
               { value: "50+", label: "Forklifts Available" },
               { value: "24/7", label: "Support Coverage" },
-              { value: "15+", label: "Years Experience" },
+              { value: "3+", label: "Years Experience" },
               { value: "100%", label: "Client Satisfaction" },
             ].map((stat, index) => (
               <div key={index} className="text-center p-6 bg-card rounded-2xl border border-border hover-lift transition-all duration-300">
