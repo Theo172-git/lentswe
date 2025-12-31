@@ -57,8 +57,13 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* CTA Button */}
-            <div className="hidden lg:flex items-center gap-4">
+            {/* CTA Buttons */}
+            <div className="hidden lg:flex items-center gap-3">
+              <Link to="/auth">
+                <Button variant="outline" size="default" className="font-bold">
+                  Client Login
+                </Button>
+              </Link>
               <Link to="/contact">
                 <Button variant="default" size="default" className="font-bold group">
                   <Phone className="w-4 h-4 transition-transform group-hover:rotate-12" />

@@ -14,16 +14,223 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      breakdown_reports: {
+        Row: {
+          admin_notes: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string
+          forklift_name: string
+          id: string
+          location: string | null
+          rental_id: string | null
+          resolved_at: string | null
+          status: string
+          updated_at: string
+          urgency: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description: string
+          forklift_name: string
+          id?: string
+          location?: string | null
+          rental_id?: string | null
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string
+          urgency?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string
+          forklift_name?: string
+          id?: string
+          location?: string | null
+          rental_id?: string | null
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string
+          urgency?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "breakdown_reports_rental_id_fkey"
+            columns: ["rental_id"]
+            isOneToOne: false
+            referencedRelation: "rentals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rentals: {
+        Row: {
+          capacity: string
+          created_at: string
+          end_date: string | null
+          forklift_name: string
+          forklift_type: string
+          id: string
+          notes: string | null
+          price_per_period: number
+          quantity: number
+          rental_period: string
+          start_date: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          capacity: string
+          created_at?: string
+          end_date?: string | null
+          forklift_name: string
+          forklift_type: string
+          id?: string
+          notes?: string | null
+          price_per_period: number
+          quantity?: number
+          rental_period: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          capacity?: string
+          created_at?: string
+          end_date?: string | null
+          forklift_name?: string
+          forklift_type?: string
+          id?: string
+          notes?: string | null
+          price_per_period?: number
+          quantity?: number
+          rental_period?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      support_requests: {
+        Row: {
+          admin_response: string | null
+          category: string
+          created_at: string
+          id: string
+          message: string
+          rental_id: string | null
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_response?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          message: string
+          rental_id?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_response?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          message?: string
+          rental_id?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_requests_rental_id_fkey"
+            columns: ["rental_id"]
+            isOneToOne: false
+            referencedRelation: "rentals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "client" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +357,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["client", "admin"],
+    },
   },
 } as const
