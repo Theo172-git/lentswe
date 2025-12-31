@@ -3,9 +3,12 @@ import { ShoppingCart, Leaf, Zap, Fuel, Flame, X, Send, MessageCircle, Phone, Tr
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import forkliftElectric from "@/assets/forklift-electric.jpg";
-import forkliftDiesel from "@/assets/forklift-diesel.jpg";
-import forkliftLpg from "@/assets/forklift-lpg.jpg";
+import forklift1 from "@/assets/forklift-1.jpg";
+import forklift2 from "@/assets/forklift-2.jpg";
+import forklift3 from "@/assets/forklift-3.jpg";
+import forklift4 from "@/assets/forklift-4.jpg";
+import forklift5 from "@/assets/forklift-5.jpg";
+import forklift6 from "@/assets/forklift-6.jpg";
 
 type RentalPeriod = "weekly" | "biweekly" | "monthly";
 
@@ -32,63 +35,63 @@ interface CartItem {
 
 const products: ForkliftProduct[] = [
   {
-    id: "electric-1",
-    name: "EcoLift E3000",
+    id: "srx14-16",
+    name: "Reach Truck SRX14/16",
     type: "electric",
-    capacity: "3 Ton",
-    image: forkliftElectric,
-    description: "Zero-emission electric forklift, ideal for indoor warehouse operations. Quiet, clean, and energy efficient.",
-    prices: { weekly: 4500, biweekly: 8000, monthly: 14000 },
-    ecoFriendly: true,
-  },
-  {
-    id: "electric-2",
-    name: "EcoLift E2000",
-    type: "electric",
-    capacity: "2 Ton",
-    image: forkliftElectric,
-    description: "Compact electric forklift perfect for tight spaces. Zero emissions for a greener workplace.",
-    prices: { weekly: 3500, biweekly: 6500, monthly: 11000 },
-    ecoFriendly: true,
-  },
-  {
-    id: "diesel-1",
-    name: "PowerLift D5000",
-    type: "diesel",
-    capacity: "5 Ton",
-    image: forkliftDiesel,
-    description: "Heavy-duty diesel forklift for outdoor and demanding applications. Rugged reliability.",
-    prices: { weekly: 6500, biweekly: 12000, monthly: 20000 },
-    ecoFriendly: false,
-  },
-  {
-    id: "diesel-2",
-    name: "PowerLift D3500",
-    type: "diesel",
-    capacity: "3.5 Ton",
-    image: forkliftDiesel,
-    description: "Versatile diesel forklift balancing power and efficiency for mixed-use operations.",
+    capacity: "1,400 - 1,600 kg",
+    image: forklift1,
+    description: "Pedestrian-operated reach truck. Zero-emission electric, ideal for warehouse operations at 600mm load center.",
     prices: { weekly: 5500, biweekly: 10000, monthly: 17000 },
-    ecoFriendly: false,
-  },
-  {
-    id: "lpg-1",
-    name: "GreenGas G4000",
-    type: "lpg",
-    capacity: "4 Ton",
-    image: forkliftLpg,
-    description: "LPG-powered forklift with lower emissions than diesel. Versatile indoor/outdoor use.",
-    prices: { weekly: 5000, biweekly: 9000, monthly: 15500 },
     ecoFriendly: true,
   },
   {
-    id: "lpg-2",
-    name: "GreenGas G2500",
+    id: "s20-35",
+    name: "Forklift S20-35",
     type: "lpg",
-    capacity: "2.5 Ton",
-    image: forkliftLpg,
-    description: "Compact LPG forklift with cleaner emissions. Great for semi-enclosed areas.",
+    capacity: "2,000 - 3,500 kg",
+    image: forklift2,
+    description: "Diesel or LPG drive forklift with superelastic or pneumatic tyres. Versatile for indoor/outdoor use at 500mm LC.",
+    prices: { weekly: 6500, biweekly: 12000, monthly: 20000 },
+    ecoFriendly: true,
+  },
+  {
+    id: "wsx12-14",
+    name: "Electric Stacker WSX12/14",
+    type: "electric",
+    capacity: "1,200 - 1,400 kg",
+    image: forklift3,
+    description: "Pedestrian-operated electric stacker. Zero emissions for a cleaner, quieter workplace environment.",
     prices: { weekly: 4000, biweekly: 7500, monthly: 13000 },
+    ecoFriendly: true,
+  },
+  {
+    id: "wpio12",
+    name: "Li-ion Hand Pallet Truck WPio12",
+    type: "electric",
+    capacity: "1,200 kg",
+    image: forklift4,
+    description: "Lithium-ion powered pedestrian pallet truck. Eco-friendly, low maintenance, and highly efficient.",
+    prices: { weekly: 3000, biweekly: 5500, monthly: 9500 },
+    ecoFriendly: true,
+  },
+  {
+    id: "gtx16-20s",
+    name: "Electric 3-Wheel GTX16-20s",
+    type: "electric",
+    capacity: "1,600 - 2,000 kg",
+    image: forklift5,
+    description: "Li-ion Clark electric three-wheel forklift with superelastic tyres. Excellent maneuverability at 500mm LC.",
+    prices: { weekly: 5000, biweekly: 9500, monthly: 16000 },
+    ecoFriendly: true,
+  },
+  {
+    id: "wsx12-14-b",
+    name: "Electric Stacker WSX12/14 Pro",
+    type: "electric",
+    capacity: "1,200 - 1,400 kg",
+    image: forklift6,
+    description: "Advanced pedestrian-operated stacker with enhanced lifting capability. Perfect for tight spaces.",
+    prices: { weekly: 4500, biweekly: 8500, monthly: 14500 },
     ecoFriendly: true,
   },
 ];
