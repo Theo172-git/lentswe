@@ -184,53 +184,60 @@ const ForkliftMarketplace = () => {
     : products.filter((p) => p.type === filter);
 
   return (
-    <section className="section-padding bg-muted/20 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-72 h-72 bg-secondary/5 blob-shape" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 blob-shape-2" />
+    <section className="section-padding bg-gradient-to-br from-background via-muted/30 to-background relative overflow-hidden">
+      {/* Enhanced decorative elements */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 blob-shape animate-blob" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-primary/10 to-secondary/5 blob-shape-2 animate-blob animation-delay-400" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-primary/5 via-transparent to-transparent rounded-full" />
 
       <div className="container-custom relative z-10">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <span className="section-subtitle">Forklift Rentals</span>
-          <h2 className="section-title mb-4">
+        {/* Enhanced Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20 mb-6 animate-fade-in">
+            <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+            <span className="text-sm font-bold text-primary uppercase tracking-wider">Premium Fleet</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-6">
             Rent Quality <span className="text-gradient">Forklifts</span>
           </h2>
-          <p className="section-description max-w-3xl mx-auto mb-6">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
             Choose from our fleet of well-maintained forklifts. Add to your inquiry cart and we'll get back to you promptly.
           </p>
           
-          {/* Eco Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-500/10 rounded-full border border-emerald-500/30 mb-8">
-            <Leaf className="w-5 h-5 text-emerald-600" />
-            <span className="font-bold text-emerald-700 text-sm">Environmental sustainability is our priority</span>
+          {/* Enhanced Eco Badge */}
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-full border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
+            <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
+              <Leaf className="w-5 h-5 text-white" />
+            </div>
+            <span className="font-bold text-emerald-700 dark:text-emerald-400">Environmental sustainability is our priority</span>
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+        {/* Enhanced Filters */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-14">
           {[
-            { key: "all", label: "All Forklifts" },
-            { key: "electric", label: "Electric", icon: Zap },
-            { key: "diesel", label: "Diesel", icon: Fuel },
-            { key: "lpg", label: "LPG Gas", icon: Flame },
+            { key: "all", label: "All Forklifts", color: "primary" },
+            { key: "electric", label: "Electric", icon: Zap, color: "emerald" },
+            { key: "diesel", label: "Diesel", icon: Fuel, color: "amber" },
+            { key: "lpg", label: "LPG Gas", icon: Flame, color: "orange" },
           ].map((f) => (
             <button
               key={f.key}
               onClick={() => setFilter(f.key as typeof filter)}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 ${
+              className={`inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 ${
                 filter === f.key
-                  ? "bg-primary text-primary-foreground shadow-glow"
-                  : "bg-card border border-border hover:border-primary/30 text-foreground"
+                  ? "bg-primary text-primary-foreground shadow-glow scale-105"
+                  : "bg-card border-2 border-border hover:border-primary/50 text-foreground hover:shadow-lg hover:-translate-y-0.5"
               }`}
             >
-              {f.icon && <f.icon className="w-4 h-4" />}
+              {f.icon && <f.icon className="w-5 h-5" />}
               {f.label}
             </button>
           ))}
         </div>
 
-        {/* Products Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {/* Enhanced Products Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {filteredProducts.map((product) => {
             const TypeIcon = typeIcons[product.type];
             const period = selectedPeriods[product.id] || "monthly";
@@ -238,51 +245,57 @@ const ForkliftMarketplace = () => {
             return (
               <div
                 key={product.id}
-                className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-glow hover:border-primary/30 transition-all duration-300 hover-lift"
+                className="group bg-card rounded-3xl border-2 border-border overflow-hidden hover:shadow-2xl hover:border-primary/40 transition-all duration-500 hover:-translate-y-2"
               >
-                {/* Image */}
-                <div className="relative aspect-square overflow-hidden bg-muted/30">
+                {/* Enhanced Image */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/50 to-muted">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   {product.ecoFriendly && (
-                    <div className="absolute top-3 left-3">
-                      <Badge className="bg-emerald-500 text-white border-0 gap-1">
-                        <Leaf className="w-3 h-3" />
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 gap-1.5 px-3 py-1.5 shadow-lg">
+                        <Leaf className="w-4 h-4" />
                         Eco-Friendly
                       </Badge>
                     </div>
                   )}
-                  <div className="absolute top-3 right-3">
-                    <Badge className={`border ${typeColors[product.type]} gap-1`}>
-                      <TypeIcon className="w-3 h-3" />
+                  <div className="absolute top-4 right-4">
+                    <Badge className={`border-2 ${typeColors[product.type]} gap-1.5 px-3 py-1.5 backdrop-blur-sm bg-background/80`}>
+                      <TypeIcon className="w-4 h-4" />
                       {product.type.toUpperCase()}
                     </Badge>
                   </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-5">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-bold text-foreground">{product.name}</h3>
-                    <span className="text-sm font-semibold text-primary bg-primary/10 px-2 py-1 rounded">
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="px-3 py-1.5 bg-primary text-primary-foreground rounded-full text-sm font-bold shadow-lg">
                       {product.capacity}
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{product.description}</p>
+                </div>
 
-                  {/* Rental Period Selector */}
-                  <div className="flex gap-2 mb-4">
+                {/* Enhanced Content */}
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-xl font-black text-foreground">{product.name}</h3>
+                    <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+                      {product.capacity}
+                    </span>
+                  </div>
+                  <p className="text-muted-foreground mb-5 line-clamp-2">{product.description}</p>
+
+                  {/* Enhanced Rental Period Selector */}
+                  <div className="flex gap-2 mb-5 p-1 bg-muted/50 rounded-xl">
                     {(["weekly", "biweekly", "monthly"] as RentalPeriod[]).map((p) => (
                       <button
                         key={p}
                         onClick={() => setSelectedPeriods({ ...selectedPeriods, [product.id]: p })}
-                        className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
+                        className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-200 ${
                           period === p
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                            ? "bg-primary text-primary-foreground shadow-md"
+                            : "text-muted-foreground hover:text-foreground"
                         }`}
                       >
                         {periodLabels[p]}
@@ -290,21 +303,21 @@ const ForkliftMarketplace = () => {
                     ))}
                   </div>
 
-                  {/* Price & Add to Cart */}
-                  <div className="flex items-center justify-between">
+                  {/* Enhanced Price & Add to Cart */}
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
                     <div>
-                      <span className="text-2xl font-black text-foreground">
+                      <span className="text-3xl font-black text-foreground">
                         R{product.prices[period].toLocaleString()}
                       </span>
-                      <span className="text-sm text-muted-foreground">/{period}</span>
+                      <span className="text-sm text-muted-foreground ml-1">/{period}</span>
                     </div>
                     <Button
                       variant="default"
-                      size="sm"
+                      size="lg"
                       onClick={() => addToCart(product)}
-                      className="font-semibold gap-2"
+                      className="font-bold gap-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
                     >
-                      <ShoppingCart className="w-4 h-4" />
+                      <ShoppingCart className="w-5 h-5" />
                       Add
                     </Button>
                   </div>
@@ -314,14 +327,14 @@ const ForkliftMarketplace = () => {
           })}
         </div>
 
-        {/* Floating Cart Button */}
+        {/* Enhanced Floating Cart Button */}
         <button
           onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-primary text-primary-foreground rounded-full shadow-glow flex items-center justify-center hover:scale-110 transition-transform"
+          className="fixed bottom-6 right-6 z-50 w-18 h-18 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-2xl shadow-2xl shadow-primary/30 flex items-center justify-center hover:scale-110 hover:shadow-primary/50 transition-all duration-300 group"
         >
-          <ShoppingCart className="w-6 h-6" />
+          <ShoppingCart className="w-7 h-7 group-hover:rotate-12 transition-transform" />
           {cart.length > 0 && (
-            <span className="absolute -top-1 -right-1 w-6 h-6 bg-secondary text-secondary-foreground text-xs font-bold rounded-full flex items-center justify-center">
+            <span className="absolute -top-2 -right-2 w-7 h-7 bg-secondary text-secondary-foreground text-sm font-black rounded-full flex items-center justify-center shadow-lg animate-pulse">
               {cart.reduce((sum, item) => sum + item.quantity, 0)}
             </span>
           )}

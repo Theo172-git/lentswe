@@ -14,9 +14,12 @@ const PartnersSection = () => {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Our <span className="text-gradient">Partners & Clients</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
             Trusted by industry leaders across Southern Africa
           </p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
+            <span className="text-sm font-bold text-primary">3+ Years of Trusted Partnerships</span>
+          </div>
         </div>
 
         <div className="flex justify-center">
