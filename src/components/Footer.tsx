@@ -11,8 +11,8 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link to="/" className="flex items-center gap-3 mb-6 p-2 bg-background/90 rounded-xl w-fit">
-              <img src={logoImg} alt="Lentswe Holding" className="h-14 w-auto" />
+            <Link to="/" className="flex items-center gap-3 mb-6">
+              <img src={logoImg} alt="Lentswe Holding" className="h-16 w-auto" />
             </Link>
             <p className="text-background/60 text-sm leading-relaxed">
               Your trusted partner in materials handling, heavy machinery, transportation, and energy solutions.
