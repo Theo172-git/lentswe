@@ -1,15 +1,25 @@
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Shield, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import machineryImg from "@/assets/heavy-machinery.jpg";
 
 const HeroSection = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero" aria-label="Hero section">
-      {/* Background decorative elements */}
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden" aria-label="Hero section">
+      {/* Background Image */}
+      <div className="absolute inset-0" aria-hidden="true">
+        <img 
+          src={machineryImg} 
+          alt="" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/85 to-background/95" />
+      </div>
+      
+      {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 blob-shape animate-blob animate-float" />
         <div className="absolute bottom-20 left-0 w-80 h-80 bg-secondary/10 blob-shape-2 animate-blob animation-delay-400" style={{ animationDuration: '10s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl" />
       </div>
 
       <div className="container-custom relative z-10 pt-20">
@@ -47,15 +57,27 @@ const HeroSection = () => {
             </Link>
           </div>
 
+          {/* Safety & Quality Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-12 animate-fade-in-up animation-delay-350">
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary/20 rounded-full border border-secondary/30">
+              <Shield className="w-5 h-5 text-secondary" />
+              <span className="font-bold text-primary-foreground text-sm">Safety Compliance Priority</span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/20 rounded-full border border-primary/30">
+              <Award className="w-5 h-5 text-primary" />
+              <span className="font-bold text-primary-foreground text-sm">Quality Machinery</span>
+            </div>
+          </div>
+
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 max-w-4xl mx-auto animate-fade-in-up animation-delay-400">
             {[
-              { value: "10+", label: "Years Experience" },
-              { value: "50+", label: "Projects Completed" },
-              { value: "4", label: "Service Categories" },
-              { value: "100%", label: "Client Satisfaction" },
+              { value: "3+", label: "Years Experience" },
+              { value: "10+", label: "Clients Serviced" },
+              { value: "98%", label: "SLA Execution Rate" },
+              { value: "24/7", label: "Breakdown Support" },
             ].map((stat, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className="text-center p-4 bg-background/30 backdrop-blur-sm rounded-2xl border border-border/20">
                 <div className="text-4xl md:text-5xl lg:text-6xl font-black text-primary mb-2">{stat.value}</div>
                 <div className="text-base md:text-lg font-bold text-primary-foreground/60 uppercase tracking-wide">{stat.label}</div>
               </div>

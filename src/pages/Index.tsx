@@ -3,7 +3,8 @@ import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
 import ExpandableCard from "@/components/ExpandableCard";
 import PartnersSection from "@/components/PartnersSection";
-import { ArrowRight, Forklift, Truck, Fuel, Construction, Check, Settings, Shield, Clock, Wrench } from "lucide-react";
+import ForkliftMarketplace from "@/components/ForkliftMarketplace";
+import { ArrowRight, Forklift, Truck, Fuel, Construction, Check, Settings, Shield, Clock, Wrench, Pickaxe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -78,12 +79,12 @@ const services = [
     features: ["Custom specifications", "Long-term rentals", "New procurement"],
   },
   {
-    title: "Heavy Machinery",
-    subtitle: "Earth Moving",
-    description: "Custom machinery solutions for your construction projects. Based on customer needs and specifications.",
+    title: "Mining Equipment",
+    subtitle: "Heavy Machinery",
+    description: "Specialized mining equipment solutions based on customer needs. Earth moving, drilling, and extraction machinery.",
     gradient: "from-teal to-emerald-500",
     image: machineryImg,
-    features: ["Project-based rentals", "Operator training", "Maintenance included"],
+    features: ["Mining-grade equipment", "Operator training", "Maintenance included"],
   },
   {
     title: "Transportation",
@@ -95,11 +96,11 @@ const services = [
   },
   {
     title: "Energy Solutions",
-    subtitle: "LPG Supply",
-    description: "Environmentally friendly LPG gas supply for sustainable energy needs with reliable delivery.",
+    subtitle: "Power & Fuel",
+    description: "Comprehensive energy solutions including LPG gas supply, generator rentals, and electric vehicle charging infrastructure.",
     gradient: "from-amber-500 to-orange-600",
     image: energyImg,
-    features: ["Sustainable energy", "Reliable delivery", "Competitive pricing"],
+    features: ["LPG Gas Supply", "Generator Rentals", "EV Charging Stations"],
   },
 ];
 
@@ -127,8 +128,10 @@ const Index = () => {
     <main id="main-content" className="min-h-screen">
       <Navbar />
       <HeroSection />
+      
+      {/* Forklift Rental Marketplace */}
+      <ForkliftMarketplace />
 
-      {/* Portfolio Gallery Section */}
       <section className="section-padding bg-muted/20 relative overflow-hidden">
         <div className="container-custom relative z-10">
           <div className="text-center mb-12">

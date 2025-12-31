@@ -32,8 +32,8 @@ const Navbar = () => {
         <div className="container-custom">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 hover-scale">
-              <img src={logoImg} alt="Lentswe Holding - Home" className="h-14 w-auto" />
+          <Link to="/" className="flex items-center gap-3 hover-scale">
+              <img src={logoImg} alt="Lentswe Holding - Home" className="h-14 w-auto mix-blend-multiply dark:mix-blend-screen" />
             </Link>
 
             {/* Desktop Navigation */}

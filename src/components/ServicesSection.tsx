@@ -11,9 +11,9 @@ const services = [
   },
   {
     icon: Construction,
-    title: "Heavy & Earth Moving Machinery",
-    description: "Based on customer needs and specifications, we provide the right machinery for your construction projects.",
-    features: ["Custom machinery solutions", "Project-based rentals", "Operator training available"],
+    title: "Mining Equipment",
+    description: "Specialized mining equipment and earth moving machinery based on customer needs and specifications.",
+    features: ["Mining-grade equipment", "Project-based rentals", "Operator training available"],
     color: "secondary",
   },
   {
@@ -26,8 +26,8 @@ const services = [
   {
     icon: Fuel,
     title: "Energy Solutions",
-    description: "Environmentally friendly LPG gas supply for sustainable energy needs.",
-    features: ["LPG Gas Supply", "Sustainable energy", "Reliable delivery"],
+    description: "Comprehensive energy solutions for modern industry needs.",
+    features: ["LPG Gas Supply", "Generator Rentals", "EV Charging Stations"],
     color: "secondary",
   },
 ];

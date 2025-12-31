@@ -63,7 +63,7 @@ const Team = () => {
                 subtitle={member.role}
                 description={member.position}
                 gradient={member.gradient}
-                defaultOpen={index === 0}
+                defaultOpen={index === 1}
               >
                 <div className="flex items-start gap-6">
                   <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-white/30 flex-shrink-0">
