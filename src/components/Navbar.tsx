@@ -113,7 +113,12 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <div className="pt-4 border-t border-border animate-fade-in animation-delay-300">
+            <div className="pt-4 border-t border-border space-y-3 animate-fade-in animation-delay-300">
+              <Link to="/auth" onClick={() => setIsOpen(false)} tabIndex={isOpen ? 0 : -1}>
+                <Button variant="outline" size="lg" className="w-full font-bold">
+                  Client Login
+                </Button>
+              </Link>
               <Link to="/contact" onClick={() => setIsOpen(false)} tabIndex={isOpen ? 0 : -1}>
                 <Button variant="default" size="lg" className="w-full font-bold group">
                   <Phone className="w-5 h-5 transition-transform group-hover:rotate-12" />
