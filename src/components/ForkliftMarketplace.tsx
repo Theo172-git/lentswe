@@ -258,9 +258,9 @@ const ForkliftMarketplace = () => {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-contain bg-muted/30 group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     {product.ecoFriendly && (
                       <div className="absolute top-3 sm:top-4 left-3 sm:left-4">
                         <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg text-xs">
