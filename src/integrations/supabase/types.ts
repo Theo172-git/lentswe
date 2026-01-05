@@ -70,6 +70,54 @@ export type Database = {
           },
         ]
       }
+      forklifts: {
+        Row: {
+          capacity: string
+          created_at: string
+          description: string | null
+          eco_friendly: boolean
+          id: string
+          image_url: string | null
+          is_available: boolean
+          name: string
+          price_biweekly: number
+          price_monthly: number
+          price_weekly: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          capacity: string
+          created_at?: string
+          description?: string | null
+          eco_friendly?: boolean
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          name: string
+          price_biweekly?: number
+          price_monthly?: number
+          price_weekly?: number
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: string
+          created_at?: string
+          description?: string | null
+          eco_friendly?: boolean
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          name?: string
+          price_biweekly?: number
+          price_monthly?: number
+          price_weekly?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company_name: string | null

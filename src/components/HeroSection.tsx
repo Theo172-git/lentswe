@@ -1,7 +1,7 @@
 import { ArrowRight, ChevronDown, Shield, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import machineryImg from "@/assets/heavy-machinery.jpg";
+import heroBgImg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   return (
@@ -9,9 +9,9 @@ const HeroSection = () => {
       {/* Background Image */}
       <div className="absolute inset-0" aria-hidden="true">
         <img 
-          src={machineryImg} 
+          src={heroBgImg} 
           alt="" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/85" />
       </div>

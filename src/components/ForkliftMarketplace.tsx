@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { ShoppingCart, Leaf, Zap, Fuel, Flame, X, Send, MessageCircle, Phone, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ShoppingCart, Leaf, Zap, Fuel, Flame, X, Send, MessageCircle, Phone, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import forklift1 from "@/assets/forklift-1.jpg";
 import forklift2 from "@/assets/forklift-2.jpg";
 import forklift3 from "@/assets/forklift-3.jpg";
@@ -33,68 +34,15 @@ interface CartItem {
   quantity: number;
 }
 
-const products: ForkliftProduct[] = [
-  {
-    id: "srx14-16",
-    name: "Reach Truck SRX14/16",
-    type: "electric",
-    capacity: "1,400 - 1,600 kg",
-    image: forklift1,
-    description: "Pedestrian-operated reach truck. Zero-emission electric, ideal for warehouse operations at 600mm load center.",
-    prices: { weekly: 5500, biweekly: 10000, monthly: 17000 },
-    ecoFriendly: true,
-  },
-  {
-    id: "s20-35",
-    name: "Forklift S20-35",
-    type: "lpg",
-    capacity: "2,000 - 3,500 kg",
-    image: forklift2,
-    description: "Diesel or LPG drive forklift with superelastic or pneumatic tyres. Versatile for indoor/outdoor use at 500mm LC.",
-    prices: { weekly: 6500, biweekly: 12000, monthly: 20000 },
-    ecoFriendly: true,
-  },
-  {
-    id: "wsx12-14",
-    name: "Electric Stacker WSX12/14",
-    type: "electric",
-    capacity: "1,200 - 1,400 kg",
-    image: forklift3,
-    description: "Pedestrian-operated electric stacker. Zero emissions for a cleaner, quieter workplace environment.",
-    prices: { weekly: 4000, biweekly: 7500, monthly: 13000 },
-    ecoFriendly: true,
-  },
-  {
-    id: "wpio12",
-    name: "Li-ion Hand Pallet Truck WPio12",
-    type: "electric",
-    capacity: "1,200 kg",
-    image: forklift4,
-    description: "Lithium-ion powered pedestrian pallet truck. Eco-friendly, low maintenance, and highly efficient.",
-    prices: { weekly: 3000, biweekly: 5500, monthly: 9500 },
-    ecoFriendly: true,
-  },
-  {
-    id: "gtx16-20s",
-    name: "Electric 3-Wheel GTX16-20s",
-    type: "electric",
-    capacity: "1,600 - 2,000 kg",
-    image: forklift5,
-    description: "Li-ion Clark electric three-wheel forklift with superelastic tyres. Excellent maneuverability at 500mm LC.",
-    prices: { weekly: 5000, biweekly: 9500, monthly: 16000 },
-    ecoFriendly: true,
-  },
-  {
-    id: "wsx12-14-b",
-    name: "Electric Stacker WSX12/14 Pro",
-    type: "electric",
-    capacity: "1,200 - 1,400 kg",
-    image: forklift6,
-    description: "Advanced pedestrian-operated stacker with enhanced lifting capability. Perfect for tight spaces.",
-    prices: { weekly: 4500, biweekly: 8500, monthly: 14500 },
-    ecoFriendly: true,
-  },
-];
+// Local image mapping for database entries
+const imageMap: Record<string, string> = {
+  "/forklift-1.jpg": forklift1,
+  "/forklift-2.jpg": forklift2,
+  "/forklift-3.jpg": forklift3,
+  "/forklift-4.jpg": forklift4,
+  "/forklift-5.jpg": forklift5,
+  "/forklift-6.jpg": forklift6,
+};
 
 const typeIcons = {
   electric: Zap,
@@ -115,10 +63,49 @@ const periodLabels: Record<RentalPeriod, string> = {
 };
 
 const ForkliftMarketplace = () => {
+  const [products, setProducts] = useState<ForkliftProduct[]>([]);
+  const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedPeriods, setSelectedPeriods] = useState<Record<string, RentalPeriod>>({});
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "electric" | "diesel" | "lpg">("all");
+
+  useEffect(() => {
+    fetchForklifts();
+  }, []);
+
+  const fetchForklifts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("forklifts")
+        .select("*")
+        .eq("is_available", true)
+        .order("created_at", { ascending: true });
+
+      if (error) throw error;
+
+      const mappedProducts: ForkliftProduct[] = (data || []).map((f) => ({
+        id: f.id,
+        name: f.name,
+        type: f.type as "electric" | "diesel" | "lpg",
+        capacity: f.capacity,
+        image: imageMap[f.image_url || ""] || f.image_url || forklift1,
+        description: f.description || "",
+        prices: {
+          weekly: Number(f.price_weekly),
+          biweekly: Number(f.price_biweekly),
+          monthly: Number(f.price_monthly),
+        },
+        ecoFriendly: f.eco_friendly,
+      }));
+
+      setProducts(mappedProducts);
+    } catch (error) {
+      console.error("Error fetching forklifts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addToCart = (product: ForkliftProduct) => {
     const period = selectedPeriods[product.id] || "monthly";
@@ -186,6 +173,11 @@ const ForkliftMarketplace = () => {
     ? products 
     : products.filter((p) => p.type === filter);
 
+  const getLowestPrice = () => {
+    if (products.length === 0) return 0;
+    return Math.min(...products.map(p => p.prices.monthly));
+  };
+
   return (
     <section className="section-padding bg-gradient-to-br from-background via-muted/30 to-background relative overflow-hidden">
       {/* Enhanced decorative elements */}
@@ -203,8 +195,11 @@ const ForkliftMarketplace = () => {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-6">
             Rent Quality <span className="text-gradient">Forklifts</span>
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4 leading-relaxed">
             Choose from our fleet of well-maintained forklifts. Add to your inquiry cart and we'll get back to you promptly.
+          </p>
+          <p className="text-xl md:text-2xl font-bold text-primary mb-8">
+            Starting from R{getLowestPrice().toLocaleString()} per month
           </p>
           
           {/* Enhanced Eco Badge */}
@@ -217,7 +212,7 @@ const ForkliftMarketplace = () => {
         </div>
 
         {/* Enhanced Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-14">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-14">
           {[
             { key: "all", label: "All Forklifts", color: "primary" },
             { key: "electric", label: "Electric", icon: Zap, color: "emerald" },
@@ -227,117 +222,121 @@ const ForkliftMarketplace = () => {
             <button
               key={f.key}
               onClick={() => setFilter(f.key as typeof filter)}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 ${
+              className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm transition-all duration-300 ${
                 filter === f.key
                   ? "bg-primary text-primary-foreground shadow-glow scale-105"
                   : "bg-card border-2 border-border hover:border-primary/50 text-foreground hover:shadow-lg hover:-translate-y-0.5"
               }`}
             >
-              {f.icon && <f.icon className="w-5 h-5" />}
+              {f.icon && <f.icon className="w-4 h-4" />}
               {f.label}
             </button>
           ))}
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        )}
+
         {/* Enhanced Products Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {filteredProducts.map((product) => {
-            const TypeIcon = typeIcons[product.type];
-            const period = selectedPeriods[product.id] || "monthly";
-            
-            return (
-              <div
-                key={product.id}
-                className="group bg-card rounded-3xl border-2 border-border overflow-hidden hover:shadow-2xl hover:border-primary/40 transition-all duration-500 hover:-translate-y-2"
-              >
-                {/* Enhanced Image */}
-                <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/50 to-muted">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  {product.ecoFriendly && (
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 gap-1.5 px-3 py-1.5 shadow-lg">
-                        <Leaf className="w-4 h-4" />
-                        Eco-Friendly
+        {!loading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-16">
+            {filteredProducts.map((product) => {
+              const TypeIcon = typeIcons[product.type];
+              const period = selectedPeriods[product.id] || "monthly";
+              
+              return (
+                <div
+                  key={product.id}
+                  className="group bg-card rounded-2xl sm:rounded-3xl border-2 border-border overflow-hidden hover:shadow-2xl hover:border-primary/40 transition-all duration-500 hover:-translate-y-2"
+                >
+                  {/* Enhanced Image */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/50 to-muted">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {product.ecoFriendly && (
+                      <div className="absolute top-3 sm:top-4 left-3 sm:left-4">
+                        <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg text-xs">
+                          <Leaf className="w-3 h-3 sm:w-4 sm:h-4" />
+                          Eco-Friendly
+                        </Badge>
+                      </div>
+                    )}
+                    <div className="absolute top-3 sm:top-4 right-3 sm:right-4">
+                      <Badge className={`border-2 ${typeColors[product.type]} gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 backdrop-blur-sm bg-background/80 text-xs`}>
+                        <TypeIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                        {product.type.toUpperCase()}
                       </Badge>
                     </div>
-                  )}
-                  <div className="absolute top-4 right-4">
-                    <Badge className={`border-2 ${typeColors[product.type]} gap-1.5 px-3 py-1.5 backdrop-blur-sm bg-background/80`}>
-                      <TypeIcon className="w-4 h-4" />
-                      {product.type.toUpperCase()}
-                    </Badge>
-                  </div>
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="px-3 py-1.5 bg-primary text-primary-foreground rounded-full text-sm font-bold shadow-lg">
-                      {product.capacity}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Enhanced Content */}
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-black text-foreground">{product.name}</h3>
-                    <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-full">
-                      {product.capacity}
-                    </span>
-                  </div>
-                  <p className="text-muted-foreground mb-5 line-clamp-2">{product.description}</p>
-
-                  {/* Enhanced Rental Period Selector */}
-                  <div className="flex gap-2 mb-5 p-1 bg-muted/50 rounded-xl">
-                    {(["weekly", "biweekly", "monthly"] as RentalPeriod[]).map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => setSelectedPeriods({ ...selectedPeriods, [product.id]: p })}
-                        className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-200 ${
-                          period === p
-                            ? "bg-primary text-primary-foreground shadow-md"
-                            : "text-muted-foreground hover:text-foreground"
-                        }`}
-                      >
-                        {periodLabels[p]}
-                      </button>
-                    ))}
                   </div>
 
-                  {/* Enhanced Price & Add to Cart */}
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <div>
-                      <span className="text-3xl font-black text-foreground">
-                        R{product.prices[period].toLocaleString()}
+                  {/* Enhanced Content */}
+                  <div className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
+                      <h3 className="text-lg sm:text-xl font-black text-foreground">{product.name}</h3>
+                      <span className="text-xs sm:text-sm font-bold text-primary bg-primary/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full whitespace-nowrap self-start">
+                        {product.capacity}
                       </span>
-                      <span className="text-sm text-muted-foreground ml-1">/{period}</span>
                     </div>
-                    <Button
-                      variant="default"
-                      size="lg"
-                      onClick={() => addToCart(product)}
-                      className="font-bold gap-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-                    >
-                      <ShoppingCart className="w-5 h-5" />
-                      Add
-                    </Button>
+                    <p className="text-sm text-muted-foreground mb-4 sm:mb-5 line-clamp-2">{product.description}</p>
+
+                    {/* Enhanced Rental Period Selector */}
+                    <div className="flex gap-1 sm:gap-2 mb-4 sm:mb-5 p-1 bg-muted/50 rounded-lg sm:rounded-xl">
+                      {(["weekly", "biweekly", "monthly"] as RentalPeriod[]).map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => setSelectedPeriods({ ...selectedPeriods, [product.id]: p })}
+                          className={`flex-1 py-2 sm:py-2.5 text-xs sm:text-sm font-bold rounded-md sm:rounded-lg transition-all duration-200 ${
+                            period === p
+                              ? "bg-primary text-primary-foreground shadow-md"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {periodLabels[p]}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Enhanced Price & Add to Cart */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 border-t border-border">
+                      <div>
+                        <span className="text-2xl sm:text-3xl font-black text-foreground">
+                          R{product.prices[period].toLocaleString()}
+                        </span>
+                        <span className="text-xs sm:text-sm text-muted-foreground ml-1">/{period}</span>
+                      </div>
+                      <Button
+                        variant="default"
+                        size="default"
+                        onClick={() => addToCart(product)}
+                        className="w-full sm:w-auto font-bold gap-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+                      >
+                        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
+                        Add to Inquiry
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Enhanced Floating Cart Button */}
         <button
           onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-18 h-18 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-2xl shadow-2xl shadow-primary/30 flex items-center justify-center hover:scale-110 hover:shadow-primary/50 transition-all duration-300 group"
+          className="fixed bottom-6 right-6 z-50 w-16 h-16 sm:w-18 sm:h-18 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-2xl shadow-2xl shadow-primary/30 flex items-center justify-center hover:scale-110 hover:shadow-primary/50 transition-all duration-300 group"
         >
-          <ShoppingCart className="w-7 h-7 group-hover:rotate-12 transition-transform" />
+          <ShoppingCart className="w-6 h-6 sm:w-7 sm:h-7 group-hover:rotate-12 transition-transform" />
           {cart.length > 0 && (
-            <span className="absolute -top-2 -right-2 w-7 h-7 bg-secondary text-secondary-foreground text-sm font-black rounded-full flex items-center justify-center shadow-lg animate-pulse">
+            <span className="absolute -top-2 -right-2 w-6 h-6 sm:w-7 sm:h-7 bg-secondary text-secondary-foreground text-xs sm:text-sm font-black rounded-full flex items-center justify-center shadow-lg animate-pulse">
               {cart.reduce((sum, item) => sum + item.quantity, 0)}
             </span>
           )}
@@ -352,8 +351,8 @@ const ForkliftMarketplace = () => {
             />
             <div className="relative bg-card w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl max-h-[85vh] overflow-hidden shadow-2xl animate-slide-in-up">
               {/* Header */}
-              <div className="flex items-center justify-between p-5 border-b border-border">
-                <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+              <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border">
+                <h3 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
                   <ShoppingCart className="w-5 h-5 text-primary" />
                   Inquiry Cart
                 </h3>
@@ -366,25 +365,25 @@ const ForkliftMarketplace = () => {
               </div>
 
               {/* Cart Items */}
-              <div className="p-5 max-h-[40vh] overflow-y-auto space-y-4">
+              <div className="p-4 sm:p-5 max-h-[40vh] overflow-y-auto space-y-3 sm:space-y-4">
                 {cart.length === 0 ? (
                   <p className="text-center text-muted-foreground py-8">
                     Your inquiry cart is empty
                   </p>
                 ) : (
                   cart.map((item, index) => (
-                    <div key={index} className="flex gap-4 p-3 bg-muted/30 rounded-xl">
+                    <div key={index} className="flex gap-3 sm:gap-4 p-3 bg-muted/30 rounded-xl">
                       <img
                         src={item.product.image}
                         alt={item.product.name}
-                        className="w-16 h-16 rounded-lg object-cover"
+                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-foreground truncate">{item.product.name}</h4>
-                        <p className="text-sm text-muted-foreground">
+                        <h4 className="font-semibold text-foreground truncate text-sm sm:text-base">{item.product.name}</h4>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                           {item.product.capacity} • {periodLabels[item.rentalPeriod]}
                         </p>
-                        <div className="flex items-center gap-3 mt-2">
+                        <div className="flex items-center gap-2 sm:gap-3 mt-2">
                           <div className="flex items-center gap-2 bg-background rounded-lg px-2">
                             <button 
                               onClick={() => updateQuantity(index, -1)}
@@ -392,7 +391,7 @@ const ForkliftMarketplace = () => {
                             >
                               -
                             </button>
-                            <span className="font-semibold w-6 text-center">{item.quantity}</span>
+                            <span className="font-semibold w-6 text-center text-sm">{item.quantity}</span>
                             <button 
                               onClick={() => updateQuantity(index, 1)}
                               className="p-1 hover:text-primary"
@@ -400,17 +399,17 @@ const ForkliftMarketplace = () => {
                               +
                             </button>
                           </div>
-                          <span className="font-bold text-primary">
+                          <span className="font-bold text-primary text-sm">
                             R{(item.product.prices[item.rentalPeriod] * item.quantity).toLocaleString()}
                           </span>
+                          <button
+                            onClick={() => removeFromCart(index)}
+                            className="p-1.5 text-muted-foreground hover:text-destructive transition-colors ml-auto"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
-                      <button
-                        onClick={() => removeFromCart(index)}
-                        className="p-2 text-destructive hover:bg-destructive/10 rounded-lg self-start"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
                     </div>
                   ))
                 )}
@@ -418,35 +417,31 @@ const ForkliftMarketplace = () => {
 
               {/* Footer */}
               {cart.length > 0 && (
-                <div className="p-5 border-t border-border space-y-4">
-                  <div className="flex items-center justify-between text-lg">
-                    <span className="font-semibold text-foreground">Estimated Total:</span>
-                    <span className="font-black text-primary text-2xl">
-                      R{getCartTotal().toLocaleString()}
-                    </span>
+                <div className="p-4 sm:p-5 border-t border-border space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-muted-foreground">Estimated Total</span>
+                    <span className="text-xl sm:text-2xl font-black text-foreground">R{getCartTotal().toLocaleString()}</span>
                   </div>
-                  
                   <div className="grid grid-cols-2 gap-3">
                     <Button
                       variant="default"
-                      className="w-full font-bold gap-2"
+                      className="gap-2 font-bold"
                       onClick={sendWhatsAppInquiry}
                     >
-                      <MessageCircle className="w-5 h-5" />
+                      <MessageCircle className="w-4 h-4" />
                       WhatsApp
                     </Button>
                     <Button
-                      variant="secondary"
-                      className="w-full font-bold gap-2"
+                      variant="outline"
+                      className="gap-2 font-bold"
                       onClick={sendEmailInquiry}
                     >
-                      <Send className="w-5 h-5" />
+                      <Send className="w-4 h-4" />
                       Email
                     </Button>
                   </div>
-                  
-                  <p className="text-xs text-muted-foreground text-center">
-                    Or call us directly: <a href="tel:+27658795912" className="text-primary font-semibold hover:underline">+27 65 879 5912</a>
+                  <p className="text-xs text-center text-muted-foreground">
+                    We'll respond within 24 hours with availability and pricing confirmation
                   </p>
                 </div>
               )}

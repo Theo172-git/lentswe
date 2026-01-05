@@ -3,13 +3,30 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { 
   LogOut, Users, Package, AlertTriangle, MessageSquare, 
-  ArrowLeft, Loader2, CheckCircle, XCircle, Clock, Eye
+  ArrowLeft, Loader2, CheckCircle, XCircle, Clock, Eye, 
+  Forklift, Plus, Edit, Trash2, Save, X
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface UserProfile {
   user_id: string;
@@ -59,17 +76,48 @@ interface SupportRequest {
   created_at: string;
 }
 
+interface Forklift {
+  id: string;
+  name: string;
+  type: string;
+  capacity: string;
+  description: string | null;
+  image_url: string | null;
+  price_weekly: number;
+  price_biweekly: number;
+  price_monthly: number;
+  eco_friendly: boolean;
+  is_available: boolean;
+  created_at: string;
+}
+
 const Admin = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<"users" | "rentals" | "breakdowns" | "support">("users");
+  const [activeTab, setActiveTab] = useState<"forklifts" | "users" | "rentals" | "breakdowns" | "support">("forklifts");
   
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [breakdowns, setBreakdowns] = useState<BreakdownReport[]>([]);
   const [supportRequests, setSupportRequests] = useState<SupportRequest[]>([]);
+  const [forklifts, setForklifts] = useState<Forklift[]>([]);
+  
+  const [editingForklift, setEditingForklift] = useState<Forklift | null>(null);
+  const [isForkliftDialogOpen, setIsForkliftDialogOpen] = useState(false);
+  const [forkliftForm, setForkliftForm] = useState({
+    name: "",
+    type: "electric",
+    capacity: "",
+    description: "",
+    image_url: "",
+    price_weekly: 0,
+    price_biweekly: 0,
+    price_monthly: 0,
+    eco_friendly: true,
+    is_available: true,
+  });
   
   const navigate = useNavigate();
 
@@ -100,7 +148,6 @@ const Admin = () => {
   const checkAdminAndFetchData = async (userId: string) => {
     setLoading(true);
     try {
-      // Check if admin
       const { data: roleData } = await supabase
         .from("user_roles")
         .select("role")
@@ -125,17 +172,19 @@ const Admin = () => {
 
   const fetchAllData = async () => {
     try {
-      const [usersRes, rentalsRes, breakdownsRes, supportRes] = await Promise.all([
+      const [usersRes, rentalsRes, breakdownsRes, supportRes, forkliftsRes] = await Promise.all([
         supabase.from("profiles").select("*").order("created_at", { ascending: false }),
         supabase.from("rentals").select("*").order("created_at", { ascending: false }),
         supabase.from("breakdown_reports").select("*").order("created_at", { ascending: false }),
         supabase.from("support_requests").select("*").order("created_at", { ascending: false }),
+        supabase.from("forklifts").select("*").order("created_at", { ascending: true }),
       ]);
 
       setUsers(usersRes.data || []);
       setRentals(rentalsRes.data || []);
       setBreakdowns(breakdownsRes.data || []);
       setSupportRequests(supportRes.data || []);
+      setForklifts(forkliftsRes.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -196,6 +245,97 @@ const Admin = () => {
     }
   };
 
+  const openForkliftDialog = (forklift?: Forklift) => {
+    if (forklift) {
+      setEditingForklift(forklift);
+      setForkliftForm({
+        name: forklift.name,
+        type: forklift.type,
+        capacity: forklift.capacity,
+        description: forklift.description || "",
+        image_url: forklift.image_url || "",
+        price_weekly: Number(forklift.price_weekly),
+        price_biweekly: Number(forklift.price_biweekly),
+        price_monthly: Number(forklift.price_monthly),
+        eco_friendly: forklift.eco_friendly,
+        is_available: forklift.is_available,
+      });
+    } else {
+      setEditingForklift(null);
+      setForkliftForm({
+        name: "",
+        type: "electric",
+        capacity: "",
+        description: "",
+        image_url: "",
+        price_weekly: 0,
+        price_biweekly: 0,
+        price_monthly: 0,
+        eco_friendly: true,
+        is_available: true,
+      });
+    }
+    setIsForkliftDialogOpen(true);
+  };
+
+  const saveForklift = async () => {
+    try {
+      if (editingForklift) {
+        const { error } = await supabase
+          .from("forklifts")
+          .update(forkliftForm)
+          .eq("id", editingForklift.id);
+        
+        if (error) throw error;
+        toast.success("Forklift updated successfully");
+      } else {
+        const { error } = await supabase
+          .from("forklifts")
+          .insert([forkliftForm]);
+        
+        if (error) throw error;
+        toast.success("Forklift added successfully");
+      }
+      
+      setIsForkliftDialogOpen(false);
+      fetchAllData();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const deleteForklift = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this forklift?")) return;
+    
+    try {
+      const { error } = await supabase
+        .from("forklifts")
+        .delete()
+        .eq("id", id);
+      
+      if (error) throw error;
+      toast.success("Forklift deleted");
+      fetchAllData();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const toggleForkliftAvailability = async (id: string, isAvailable: boolean) => {
+    try {
+      const { error } = await supabase
+        .from("forklifts")
+        .update({ is_available: !isAvailable })
+        .eq("id", id);
+      
+      if (error) throw error;
+      toast.success(`Forklift ${!isAvailable ? "enabled" : "disabled"}`);
+      fetchAllData();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "active":
@@ -242,25 +382,26 @@ const Admin = () => {
               </Link>
               <div>
                 <h1 className="text-3xl font-bold text-foreground">Admin Panel</h1>
-                <p className="text-muted-foreground">Manage users, rentals, breakdowns, and support</p>
+                <p className="text-muted-foreground">Manage forklifts, users, rentals, breakdowns, and support</p>
               </div>
             </div>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
             {[
-              { icon: Users, label: "Total Users", value: users.length, color: "primary" },
-              { icon: Package, label: "Total Rentals", value: rentals.length, color: "teal" },
+              { icon: Forklift, label: "Forklifts", value: forklifts.length, color: "primary" },
+              { icon: Users, label: "Total Users", value: users.length, color: "teal" },
+              { icon: Package, label: "Total Rentals", value: rentals.length, color: "violet" },
               { icon: AlertTriangle, label: "Open Breakdowns", value: breakdowns.filter(b => b.status !== "resolved").length, color: "amber" },
-              { icon: MessageSquare, label: "Open Tickets", value: supportRequests.filter(s => s.status === "open").length, color: "violet" },
+              { icon: MessageSquare, label: "Open Tickets", value: supportRequests.filter(s => s.status === "open").length, color: "rose" },
             ].map((stat, index) => (
-              <div key={index} className="bg-card rounded-2xl p-5 border border-border">
+              <div key={index} className="bg-card rounded-2xl p-4 sm:p-5 border border-border">
                 <div className={`w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3`}>
                   <stat.icon className="w-5 h-5 text-primary" />
                 </div>
-                <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <p className="text-xl sm:text-2xl font-bold text-foreground">{stat.value}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -268,6 +409,7 @@ const Admin = () => {
           {/* Tabs */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
             {[
+              { key: "forklifts", label: "Forklifts", icon: Forklift },
               { key: "users", label: "Users", icon: Users },
               { key: "rentals", label: "Rentals", icon: Package },
               { key: "breakdowns", label: "Breakdowns", icon: AlertTriangle },
@@ -276,7 +418,7 @@ const Admin = () => {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as typeof activeTab)}
-                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl font-semibold transition-all whitespace-nowrap text-sm ${
                   activeTab === tab.key
                     ? "bg-primary text-primary-foreground shadow-glow"
                     : "bg-card border border-border hover:border-primary/50"
@@ -289,7 +431,173 @@ const Admin = () => {
           </div>
 
           {/* Content */}
-          <div className="bg-card rounded-3xl border border-border p-6">
+          <div className="bg-card rounded-3xl border border-border p-4 sm:p-6">
+            {/* Forklifts Tab */}
+            {activeTab === "forklifts" && (
+              <div>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                  <h2 className="text-xl font-bold">Manage Forklifts ({forklifts.length})</h2>
+                  <Button onClick={() => openForkliftDialog()} className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    Add Forklift
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {forklifts.map((forklift) => (
+                    <div key={forklift.id} className={`p-4 rounded-xl border ${forklift.is_available ? 'bg-muted/30 border-border' : 'bg-red-500/5 border-red-500/20'}`}>
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-foreground truncate">{forklift.name}</h3>
+                          <p className="text-sm text-muted-foreground">{forklift.type.toUpperCase()} • {forklift.capacity}</p>
+                        </div>
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${forklift.is_available ? 'bg-emerald-500/10 text-emerald-600' : 'bg-red-500/10 text-red-600'}`}>
+                          {forklift.is_available ? "Available" : "Disabled"}
+                        </span>
+                      </div>
+                      
+                      <div className="text-sm text-muted-foreground mb-3 space-y-1">
+                        <p>Weekly: <span className="font-semibold text-foreground">R{Number(forklift.price_weekly).toLocaleString()}</span></p>
+                        <p>Bi-weekly: <span className="font-semibold text-foreground">R{Number(forklift.price_biweekly).toLocaleString()}</span></p>
+                        <p>Monthly: <span className="font-semibold text-foreground">R{Number(forklift.price_monthly).toLocaleString()}</span></p>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" onClick={() => openForkliftDialog(forklift)} className="flex-1 gap-1">
+                          <Edit className="w-3 h-3" />
+                          Edit
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => toggleForkliftAvailability(forklift.id, forklift.is_available)}>
+                          {forklift.is_available ? <XCircle className="w-3 h-3" /> : <CheckCircle className="w-3 h-3" />}
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => deleteForklift(forklift.id)} className="text-destructive hover:text-destructive">
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Forklift Dialog */}
+                <Dialog open={isForkliftDialogOpen} onOpenChange={setIsForkliftDialogOpen}>
+                  <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>{editingForklift ? "Edit Forklift" : "Add New Forklift"}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <label className="text-sm font-medium">Name</label>
+                        <Input 
+                          value={forkliftForm.name}
+                          onChange={(e) => setForkliftForm({...forkliftForm, name: e.target.value})}
+                          placeholder="Forklift name"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium">Type</label>
+                          <Select 
+                            value={forkliftForm.type}
+                            onValueChange={(v) => setForkliftForm({...forkliftForm, type: v})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="electric">Electric</SelectItem>
+                              <SelectItem value="diesel">Diesel</SelectItem>
+                              <SelectItem value="lpg">LPG</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Capacity</label>
+                          <Input 
+                            value={forkliftForm.capacity}
+                            onChange={(e) => setForkliftForm({...forkliftForm, capacity: e.target.value})}
+                            placeholder="e.g., 1,400 - 1,600 kg"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Description</label>
+                        <Textarea 
+                          value={forkliftForm.description}
+                          onChange={(e) => setForkliftForm({...forkliftForm, description: e.target.value})}
+                          placeholder="Forklift description"
+                          rows={3}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Image URL</label>
+                        <Input 
+                          value={forkliftForm.image_url}
+                          onChange={(e) => setForkliftForm({...forkliftForm, image_url: e.target.value})}
+                          placeholder="/forklift-1.jpg or full URL"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">Use /forklift-1.jpg through /forklift-6.jpg for local images</p>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4">
+                        <div>
+                          <label className="text-sm font-medium">Weekly (R)</label>
+                          <Input 
+                            type="number"
+                            value={forkliftForm.price_weekly}
+                            onChange={(e) => setForkliftForm({...forkliftForm, price_weekly: Number(e.target.value)})}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Bi-weekly (R)</label>
+                          <Input 
+                            type="number"
+                            value={forkliftForm.price_biweekly}
+                            onChange={(e) => setForkliftForm({...forkliftForm, price_biweekly: Number(e.target.value)})}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Monthly (R)</label>
+                          <Input 
+                            type="number"
+                            value={forkliftForm.price_monthly}
+                            onChange={(e) => setForkliftForm({...forkliftForm, price_monthly: Number(e.target.value)})}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-4">
+                        <label className="flex items-center gap-2">
+                          <input 
+                            type="checkbox"
+                            checked={forkliftForm.eco_friendly}
+                            onChange={(e) => setForkliftForm({...forkliftForm, eco_friendly: e.target.checked})}
+                            className="rounded"
+                          />
+                          <span className="text-sm">Eco-Friendly</span>
+                        </label>
+                        <label className="flex items-center gap-2">
+                          <input 
+                            type="checkbox"
+                            checked={forkliftForm.is_available}
+                            onChange={(e) => setForkliftForm({...forkliftForm, is_available: e.target.checked})}
+                            className="rounded"
+                          />
+                          <span className="text-sm">Available</span>
+                        </label>
+                      </div>
+                      <div className="flex gap-3 pt-4">
+                        <Button onClick={saveForklift} className="flex-1 gap-2">
+                          <Save className="w-4 h-4" />
+                          {editingForklift ? "Update" : "Create"}
+                        </Button>
+                        <Button variant="outline" onClick={() => setIsForkliftDialogOpen(false)}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
+
             {/* Users Tab */}
             {activeTab === "users" && (
               <div>
@@ -361,6 +669,9 @@ const Admin = () => {
                       </div>
                     </div>
                   ))}
+                  {rentals.length === 0 && (
+                    <p className="text-center text-muted-foreground py-8">No rentals yet</p>
+                  )}
                 </div>
               </div>
             )}
@@ -407,6 +718,9 @@ const Admin = () => {
                       </div>
                     </div>
                   ))}
+                  {breakdowns.length === 0 && (
+                    <p className="text-center text-muted-foreground py-8">No breakdown reports yet</p>
+                  )}
                 </div>
               </div>
             )}
@@ -439,24 +753,22 @@ const Admin = () => {
                             {request.status}
                           </span>
                           {request.status === "open" && (
-                            <>
-                              <Button 
-                                size="sm" 
-                                onClick={() => {
-                                  const response = prompt("Enter your response:");
-                                  if (response) {
-                                    updateSupportStatus(request.id, "closed", response);
-                                  }
-                                }}
-                              >
-                                Respond & Close
-                              </Button>
-                            </>
+                            <Button size="sm" onClick={() => updateSupportStatus(request.id, "in_progress")}>
+                              <Eye className="w-3 h-3 mr-1" /> Review
+                            </Button>
+                          )}
+                          {request.status === "in_progress" && (
+                            <Button size="sm" onClick={() => updateSupportStatus(request.id, "closed")}>
+                              <CheckCircle className="w-3 h-3 mr-1" /> Close
+                            </Button>
                           )}
                         </div>
                       </div>
                     </div>
                   ))}
+                  {supportRequests.length === 0 && (
+                    <p className="text-center text-muted-foreground py-8">No support requests yet</p>
+                  )}
                 </div>
               </div>
             )}
