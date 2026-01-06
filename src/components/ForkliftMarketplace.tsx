@@ -1,17 +1,30 @@
 import { useState, useEffect } from "react";
-import { ShoppingCart, Leaf, Zap, Fuel, Flame, X, Send, MessageCircle, Phone, Trash2, Loader2 } from "lucide-react";
+import { Leaf, Zap, Fuel, Flame, X, Loader2, FileText, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import forklift1 from "@/assets/forklift-1.jpg";
 import forklift2 from "@/assets/forklift-2.jpg";
 import forklift3 from "@/assets/forklift-3.jpg";
 import forklift4 from "@/assets/forklift-4.jpg";
 import forklift5 from "@/assets/forklift-5.jpg";
 import forklift6 from "@/assets/forklift-6.jpg";
-
-type RentalPeriod = "weekly" | "biweekly" | "monthly";
 
 interface ForkliftProduct {
   id: string;
@@ -20,18 +33,7 @@ interface ForkliftProduct {
   capacity: string;
   image: string;
   description: string;
-  prices: {
-    weekly: number;
-    biweekly: number;
-    monthly: number;
-  };
   ecoFriendly: boolean;
-}
-
-interface CartItem {
-  product: ForkliftProduct;
-  rentalPeriod: RentalPeriod;
-  quantity: number;
 }
 
 // Local image mapping for database entries
@@ -56,19 +58,51 @@ const typeColors = {
   lpg: "bg-orange-500/10 text-orange-600 border-orange-500/30",
 };
 
-const periodLabels: Record<RentalPeriod, string> = {
-  weekly: "Weekly",
-  biweekly: "Bi-Weekly",
-  monthly: "Monthly",
-};
+const rentalDurationOptions = [
+  { value: "1_week", label: "1 Week" },
+  { value: "2_weeks", label: "2 Weeks" },
+  { value: "monthly", label: "1 Month" },
+  { value: "3_months", label: "3 Months" },
+  { value: "1_year", label: "1 Year" },
+  { value: "custom", label: "Custom Period" },
+];
+
+const forkliftTypeOptions = [
+  { value: "electric", label: "Electric" },
+  { value: "diesel", label: "Diesel" },
+  { value: "lpg", label: "LPG / Gas" },
+];
+
+interface QuoteFormData {
+  clientName: string;
+  email: string;
+  contactNumber: string;
+  companyName: string;
+  location: string;
+  startDate: string;
+  rentalDuration: string;
+  customDuration: string;
+  forkliftType: string;
+}
 
 const ForkliftMarketplace = () => {
   const [products, setProducts] = useState<ForkliftProduct[]>([]);
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [selectedPeriods, setSelectedPeriods] = useState<Record<string, RentalPeriod>>({});
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "electric" | "diesel" | "lpg">("all");
+  const [isQuoteDialogOpen, setIsQuoteDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ForkliftProduct | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState<QuoteFormData>({
+    clientName: "",
+    email: "",
+    contactNumber: "",
+    companyName: "",
+    location: "",
+    startDate: "",
+    rentalDuration: "",
+    customDuration: "",
+    forkliftType: "",
+  });
 
   useEffect(() => {
     fetchForklifts();
@@ -91,11 +125,6 @@ const ForkliftMarketplace = () => {
         capacity: f.capacity,
         image: imageMap[f.image_url || ""] || f.image_url || forklift1,
         description: f.description || "",
-        prices: {
-          weekly: Number(f.price_weekly),
-          biweekly: Number(f.price_biweekly),
-          monthly: Number(f.price_monthly),
-        },
         ecoFriendly: f.eco_friendly,
       }));
 
@@ -107,83 +136,138 @@ const ForkliftMarketplace = () => {
     }
   };
 
-  const addToCart = (product: ForkliftProduct) => {
-    const period = selectedPeriods[product.id] || "monthly";
-    const existingIndex = cart.findIndex(
-      (item) => item.product.id === product.id && item.rentalPeriod === period
-    );
+  const openQuoteDialog = (product: ForkliftProduct) => {
+    setSelectedProduct(product);
+    setFormData({
+      ...formData,
+      forkliftType: product.type,
+    });
+    setIsQuoteDialogOpen(true);
+  };
 
-    if (existingIndex >= 0) {
-      const newCart = [...cart];
-      newCart[existingIndex].quantity += 1;
-      setCart(newCart);
-    } else {
-      setCart([...cart, { product, rentalPeriod: period, quantity: 1 }]);
+  const handleFormChange = (field: keyof QuoteFormData, value: string) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const validateForm = (): boolean => {
+    if (!formData.clientName.trim()) {
+      toast.error("Please enter your name");
+      return false;
     }
-    
-    toast.success(`Added ${product.name} (${periodLabels[period]}) to inquiry cart`);
-  };
-
-  const removeFromCart = (index: number) => {
-    setCart(cart.filter((_, i) => i !== index));
-  };
-
-  const updateQuantity = (index: number, delta: number) => {
-    const newCart = [...cart];
-    newCart[index].quantity = Math.max(1, newCart[index].quantity + delta);
-    setCart(newCart);
-  };
-
-  const getCartTotal = () => {
-    return cart.reduce((total, item) => {
-      return total + item.product.prices[item.rentalPeriod] * item.quantity;
-    }, 0);
-  };
-
-  const generateInquiryMessage = () => {
-    const items = cart.map((item) => 
-      `• ${item.product.name} (${item.product.capacity}) - ${periodLabels[item.rentalPeriod]} x${item.quantity} @ R${item.product.prices[item.rentalPeriod].toLocaleString()}/period`
-    ).join("\n");
-    
-    const total = getCartTotal();
-    
-    return `Hi Lentswe Holding,\n\nI would like to inquire about renting the following forklifts:\n\n${items}\n\nEstimated Total: R${total.toLocaleString()}\n\nPlease contact me with availability and next steps.\n\nThank you!`;
-  };
-
-  const sendWhatsAppInquiry = () => {
-    if (cart.length === 0) {
-      toast.error("Your inquiry cart is empty");
-      return;
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return false;
     }
-    const message = encodeURIComponent(generateInquiryMessage());
-    window.open(`https://wa.me/27658795912?text=${message}`, "_blank");
+    if (!formData.contactNumber.trim()) {
+      toast.error("Please enter your contact number");
+      return false;
+    }
+    if (!formData.companyName.trim()) {
+      toast.error("Please enter your company name");
+      return false;
+    }
+    if (!formData.location.trim()) {
+      toast.error("Please enter your location");
+      return false;
+    }
+    if (!formData.startDate) {
+      toast.error("Please select a start date");
+      return false;
+    }
+    if (!formData.rentalDuration) {
+      toast.error("Please select a rental duration");
+      return false;
+    }
+    if (formData.rentalDuration === "custom" && !formData.customDuration.trim()) {
+      toast.error("Please specify your custom rental period");
+      return false;
+    }
+    if (!formData.forkliftType) {
+      toast.error("Please select a forklift type");
+      return false;
+    }
+    return true;
   };
 
-  const sendEmailInquiry = () => {
-    if (cart.length === 0) {
-      toast.error("Your inquiry cart is empty");
-      return;
+  const generateQuoteMessage = () => {
+    const duration = formData.rentalDuration === "custom" 
+      ? formData.customDuration 
+      : rentalDurationOptions.find(o => o.value === formData.rentalDuration)?.label;
+    
+    const forkliftTypeLabel = forkliftTypeOptions.find(o => o.value === formData.forkliftType)?.label;
+
+    return `Hi Lentswe Holding,
+
+I would like to request a quote for forklift rental:
+
+FORKLIFT DETAILS:
+• Equipment: ${selectedProduct?.name || "General Inquiry"}
+• Capacity: ${selectedProduct?.capacity || "N/A"}
+• Type Preference: ${forkliftTypeLabel}
+
+CLIENT DETAILS:
+• Name: ${formData.clientName}
+• Company: ${formData.companyName}
+• Email: ${formData.email}
+• Contact: ${formData.contactNumber}
+• Location: ${formData.location}
+
+RENTAL REQUIREMENTS:
+• Start Date: ${formData.startDate}
+• Duration: ${duration}
+
+Please contact me with pricing and availability.
+
+Thank you!`;
+  };
+
+  const submitQuote = async (method: "whatsapp" | "email") => {
+    if (!validateForm()) return;
+    
+    setSubmitting(true);
+    
+    try {
+      const message = generateQuoteMessage();
+      
+      if (method === "whatsapp") {
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/27658795912?text=${encodedMessage}`, "_blank");
+      } else {
+        const subject = encodeURIComponent(`Quote Request - ${selectedProduct?.name || "Forklift Rental"} - ${formData.companyName}`);
+        const body = encodeURIComponent(message);
+        window.open(`mailto:Info@Lentsweholding.com?subject=${subject}&body=${body}`, "_blank");
+      }
+      
+      toast.success("Quote request initiated! We'll respond within 24 hours.");
+      setIsQuoteDialogOpen(false);
+      setFormData({
+        clientName: "",
+        email: "",
+        contactNumber: "",
+        companyName: "",
+        location: "",
+        startDate: "",
+        rentalDuration: "",
+        customDuration: "",
+        forkliftType: "",
+      });
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
-    const subject = encodeURIComponent("Forklift Rental Inquiry - Lentswe Holding");
-    const body = encodeURIComponent(generateInquiryMessage());
-    window.open(`mailto:Info@Lentsweholding.com?subject=${subject}&body=${body}`, "_blank");
   };
 
   const filteredProducts = filter === "all" 
     ? products 
     : products.filter((p) => p.type === filter);
 
-  const getLowestPrice = () => {
-    if (products.length === 0) return 0;
-    return Math.min(...products.map(p => p.prices.monthly));
-  };
-
   return (
     <section className="section-padding bg-gradient-to-br from-background via-muted/30 to-background relative overflow-hidden">
       {/* Enhanced decorative elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 blob-shape animate-blob" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-primary/10 to-secondary/5 blob-shape-2 animate-blob animation-delay-400" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-primary/5 via-transparent to-transparent rounded-full" />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 blob-shape animate-blob pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-primary/10 to-secondary/5 blob-shape-2 animate-blob animation-delay-400 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-primary/5 via-transparent to-transparent rounded-full pointer-events-none" />
 
       <div className="container-custom relative z-10">
         {/* Enhanced Header */}
@@ -196,10 +280,7 @@ const ForkliftMarketplace = () => {
             Rent Quality <span className="text-gradient">Forklifts</span>
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4 leading-relaxed">
-            Choose from our fleet of well-maintained forklifts. Add to your inquiry cart and we'll get back to you promptly.
-          </p>
-          <p className="text-xl md:text-2xl font-bold text-primary mb-8">
-            Starting from R{getLowestPrice().toLocaleString()} per month
+            Browse our fleet of well-maintained forklifts. Request a quote and we'll get back to you promptly.
           </p>
           
           {/* Enhanced Eco Badge */}
@@ -246,7 +327,6 @@ const ForkliftMarketplace = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-16">
             {filteredProducts.map((product) => {
               const TypeIcon = typeIcons[product.type];
-              const period = selectedPeriods[product.id] || "monthly";
               
               return (
                 <div
@@ -285,170 +365,192 @@ const ForkliftMarketplace = () => {
                         {product.capacity}
                       </span>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-4 sm:mb-5 line-clamp-2">{product.description}</p>
+                    <p className="text-sm text-muted-foreground mb-5 line-clamp-2">{product.description}</p>
 
-                    {/* Enhanced Rental Period Selector */}
-                    <div className="flex gap-1 sm:gap-2 mb-4 sm:mb-5 p-1 bg-muted/50 rounded-lg sm:rounded-xl">
-                      {(["weekly", "biweekly", "monthly"] as RentalPeriod[]).map((p) => (
-                        <button
-                          key={p}
-                          onClick={() => setSelectedPeriods({ ...selectedPeriods, [product.id]: p })}
-                          className={`flex-1 py-2 sm:py-2.5 text-xs sm:text-sm font-bold rounded-md sm:rounded-lg transition-all duration-200 ${
-                            period === p
-                              ? "bg-primary text-primary-foreground shadow-md"
-                              : "text-muted-foreground hover:text-foreground"
-                          }`}
-                        >
-                          {periodLabels[p]}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Enhanced Price & Add to Cart */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 border-t border-border">
-                      <div>
-                        <span className="text-2xl sm:text-3xl font-black text-foreground">
-                          R{product.prices[period].toLocaleString()}
-                        </span>
-                        <span className="text-xs sm:text-sm text-muted-foreground ml-1">/{period}</span>
-                      </div>
-                      <Button
-                        variant="default"
-                        size="default"
-                        onClick={() => addToCart(product)}
-                        className="w-full sm:w-auto font-bold gap-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-                      >
-                        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                        Add to Inquiry
-                      </Button>
-                    </div>
+                    {/* Request Quote Button */}
+                    <Button
+                      variant="default"
+                      size="lg"
+                      onClick={() => openQuoteDialog(product)}
+                      className="w-full font-bold gap-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+                    >
+                      <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                      Request Quote
+                    </Button>
                   </div>
                 </div>
               );
             })}
           </div>
         )}
-
-        {/* Enhanced Floating Cart Button */}
-        <button
-          onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-16 h-16 sm:w-18 sm:h-18 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-2xl shadow-2xl shadow-primary/30 flex items-center justify-center hover:scale-110 hover:shadow-primary/50 transition-all duration-300 group"
-        >
-          <ShoppingCart className="w-6 h-6 sm:w-7 sm:h-7 group-hover:rotate-12 transition-transform" />
-          {cart.length > 0 && (
-            <span className="absolute -top-2 -right-2 w-6 h-6 sm:w-7 sm:h-7 bg-secondary text-secondary-foreground text-xs sm:text-sm font-black rounded-full flex items-center justify-center shadow-lg animate-pulse">
-              {cart.reduce((sum, item) => sum + item.quantity, 0)}
-            </span>
-          )}
-        </button>
-
-        {/* Cart Drawer */}
-        {isCartOpen && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-            <div 
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setIsCartOpen(false)}
-            />
-            <div className="relative bg-card w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl max-h-[85vh] overflow-hidden shadow-2xl animate-slide-in-up">
-              {/* Header */}
-              <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border">
-                <h3 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
-                  <ShoppingCart className="w-5 h-5 text-primary" />
-                  Inquiry Cart
-                </h3>
-                <button
-                  onClick={() => setIsCartOpen(false)}
-                  className="p-2 hover:bg-muted rounded-full transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Cart Items */}
-              <div className="p-4 sm:p-5 max-h-[40vh] overflow-y-auto space-y-3 sm:space-y-4">
-                {cart.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">
-                    Your inquiry cart is empty
-                  </p>
-                ) : (
-                  cart.map((item, index) => (
-                    <div key={index} className="flex gap-3 sm:gap-4 p-3 bg-muted/30 rounded-xl">
-                      <img
-                        src={item.product.image}
-                        alt={item.product.name}
-                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-foreground truncate text-sm sm:text-base">{item.product.name}</h4>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          {item.product.capacity} • {periodLabels[item.rentalPeriod]}
-                        </p>
-                        <div className="flex items-center gap-2 sm:gap-3 mt-2">
-                          <div className="flex items-center gap-2 bg-background rounded-lg px-2">
-                            <button 
-                              onClick={() => updateQuantity(index, -1)}
-                              className="p-1 hover:text-primary"
-                            >
-                              -
-                            </button>
-                            <span className="font-semibold w-6 text-center text-sm">{item.quantity}</span>
-                            <button 
-                              onClick={() => updateQuantity(index, 1)}
-                              className="p-1 hover:text-primary"
-                            >
-                              +
-                            </button>
-                          </div>
-                          <span className="font-bold text-primary text-sm">
-                            R{(item.product.prices[item.rentalPeriod] * item.quantity).toLocaleString()}
-                          </span>
-                          <button
-                            onClick={() => removeFromCart(index)}
-                            className="p-1.5 text-muted-foreground hover:text-destructive transition-colors ml-auto"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* Footer */}
-              {cart.length > 0 && (
-                <div className="p-4 sm:p-5 border-t border-border space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold text-muted-foreground">Estimated Total</span>
-                    <span className="text-xl sm:text-2xl font-black text-foreground">R{getCartTotal().toLocaleString()}</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      variant="default"
-                      className="gap-2 font-bold"
-                      onClick={sendWhatsAppInquiry}
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      WhatsApp
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="gap-2 font-bold"
-                      onClick={sendEmailInquiry}
-                    >
-                      <Send className="w-4 h-4" />
-                      Email
-                    </Button>
-                  </div>
-                  <p className="text-xs text-center text-muted-foreground">
-                    We'll respond within 24 hours with availability and pricing confirmation
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Quote Request Dialog */}
+      <Dialog open={isQuoteDialogOpen} onOpenChange={setIsQuoteDialogOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <FileText className="w-5 h-5 text-primary" />
+              Request a Quote
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedProduct && (
+            <div className="p-3 bg-muted/50 rounded-xl mb-4">
+              <p className="font-semibold text-foreground">{selectedProduct.name}</p>
+              <p className="text-sm text-muted-foreground">{selectedProduct.capacity} • {selectedProduct.type.toUpperCase()}</p>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            {/* Client Name */}
+            <div>
+              <Label htmlFor="clientName">Full Name *</Label>
+              <Input
+                id="clientName"
+                value={formData.clientName}
+                onChange={(e) => handleFormChange("clientName", e.target.value)}
+                placeholder="Enter your full name"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <Label htmlFor="email">Email Address *</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleFormChange("email", e.target.value)}
+                placeholder="your@email.com"
+              />
+            </div>
+
+            {/* Contact Number */}
+            <div>
+              <Label htmlFor="contactNumber">Contact Number *</Label>
+              <Input
+                id="contactNumber"
+                value={formData.contactNumber}
+                onChange={(e) => handleFormChange("contactNumber", e.target.value)}
+                placeholder="+27 XX XXX XXXX"
+              />
+            </div>
+
+            {/* Company Name */}
+            <div>
+              <Label htmlFor="companyName">Company Name *</Label>
+              <Input
+                id="companyName"
+                value={formData.companyName}
+                onChange={(e) => handleFormChange("companyName", e.target.value)}
+                placeholder="Your company name"
+              />
+            </div>
+
+            {/* Location */}
+            <div>
+              <Label htmlFor="location">Location *</Label>
+              <Input
+                id="location"
+                value={formData.location}
+                onChange={(e) => handleFormChange("location", e.target.value)}
+                placeholder="City, Province"
+              />
+            </div>
+
+            {/* Start Date */}
+            <div>
+              <Label htmlFor="startDate">Rental Start Date *</Label>
+              <Input
+                id="startDate"
+                type="date"
+                value={formData.startDate}
+                onChange={(e) => handleFormChange("startDate", e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+              />
+            </div>
+
+            {/* Rental Duration */}
+            <div>
+              <Label htmlFor="rentalDuration">Rental Duration *</Label>
+              <Select 
+                value={formData.rentalDuration}
+                onValueChange={(v) => handleFormChange("rentalDuration", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duration" />
+                </SelectTrigger>
+                <SelectContent>
+                  {rentalDurationOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Custom Duration */}
+            {formData.rentalDuration === "custom" && (
+              <div>
+                <Label htmlFor="customDuration">Specify Custom Period *</Label>
+                <Input
+                  id="customDuration"
+                  value={formData.customDuration}
+                  onChange={(e) => handleFormChange("customDuration", e.target.value)}
+                  placeholder="e.g., 6 weeks, 4 months"
+                />
+              </div>
+            )}
+
+            {/* Forklift Type */}
+            <div>
+              <Label htmlFor="forkliftType">Preferred Forklift Type *</Label>
+              <Select 
+                value={formData.forkliftType}
+                onValueChange={(v) => handleFormChange("forkliftType", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {forkliftTypeOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Submit Buttons */}
+            <div className="grid grid-cols-2 gap-3 pt-4">
+              <Button
+                onClick={() => submitQuote("whatsapp")}
+                disabled={submitting}
+                className="gap-2 font-bold bg-emerald-600 hover:bg-emerald-700"
+              >
+                {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Calendar className="w-4 h-4" />}
+                WhatsApp
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => submitQuote("email")}
+                disabled={submitting}
+                className="gap-2 font-bold"
+              >
+                {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                Email
+              </Button>
+            </div>
+            
+            <p className="text-xs text-center text-muted-foreground">
+              We'll respond within 24 hours with pricing and availability
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
