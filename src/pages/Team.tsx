@@ -31,8 +31,8 @@ const Team = () => {
       <Navbar />
       
       {/* Hero Banner */}
-      <section className="pt-40 pb-24 bg-gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
+      <section className="pt-32 md:pt-40 pb-16 md:pb-24 bg-gradient-hero relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 blob-shape animate-blob" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/10 blob-shape-2" />
         </div>
@@ -51,7 +51,7 @@ const Team = () => {
 
       {/* Team Section with Expandable Cards */}
       <section className="section-padding bg-background relative overflow-hidden">
-        <div className="absolute top-20 right-10 w-64 h-64 bg-primary/5 blob-shape animate-blob" />
+        <div className="absolute top-20 right-10 w-64 h-64 bg-primary/5 blob-shape animate-blob pointer-events-none" />
 
         <div className="container-custom relative z-10">
           {/* Team Grid */}
@@ -82,22 +82,22 @@ const Team = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {[
               { icon: Award, value: "3+", label: "Years Experience", gradient: "from-teal to-emerald-500" },
-              { icon: Users, value: "10+", label: "Happy Clients", gradient: "from-rose-500 to-pink-600" },
-              { icon: Target, value: "98%", label: "SLA Execution Rate", gradient: "from-violet-500 to-purple-600" },
+              { icon: Users, value: "100%", label: "Black Owned", gradient: "from-rose-500 to-pink-600" },
+              { icon: Target, value: "98%", label: "Breakdowns Resolved within SLA", gradient: "from-violet-500 to-purple-600" },
               { icon: Briefcase, value: "24/7", label: "Breakdown Support", gradient: "from-amber-500 to-orange-600" },
             ].map((stat, index) => (
               <div
                 key={index}
-                className="group text-center p-8 rounded-3xl bg-card border-2 border-border hover:border-primary/30 hover:shadow-glow transition-all duration-300"
+                className="group text-center p-4 md:p-8 rounded-3xl bg-card border-2 border-border hover:border-primary/30 hover:shadow-glow transition-all duration-300"
               >
-                <div className={`w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-                  <stat.icon className="w-8 h-8 text-white" />
+                <div className={`w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-5 rounded-2xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+                  <stat.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                 </div>
-                <div className="text-4xl md:text-5xl font-black text-foreground mb-2">{stat.value}</div>
-                <div className="text-base text-muted-foreground font-bold uppercase tracking-wide">{stat.label}</div>
+                <div className="text-3xl md:text-5xl font-black text-foreground mb-1 md:mb-2">{stat.value}</div>
+                <div className="text-xs md:text-base text-muted-foreground font-bold uppercase tracking-wide leading-tight">{stat.label}</div>
               </div>
             ))}
           </div>

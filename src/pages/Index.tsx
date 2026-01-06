@@ -164,8 +164,8 @@ const Index = () => {
 
       {/* Forklift Solutions Section */}
       <section className="section-padding bg-background relative overflow-hidden">
-        <div className="absolute top-20 left-0 w-72 h-72 bg-primary/5 blob-shape-2" />
-        <div className="absolute bottom-10 right-0 w-96 h-96 bg-secondary/5 blob-shape" />
+        <div className="absolute top-20 left-0 w-72 h-72 bg-primary/5 blob-shape-2 pointer-events-none" />
+        <div className="absolute bottom-10 right-0 w-96 h-96 bg-secondary/5 blob-shape pointer-events-none" />
         
         <div className="container-custom relative z-10">
           <div className="text-center mb-16">
@@ -201,21 +201,21 @@ const Index = () => {
           </div>
 
           {/* Showcase Gallery */}
-          <div className="bg-muted/30 rounded-3xl p-8 md:p-10 border border-border">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+          <div className="bg-muted/30 rounded-3xl p-6 md:p-10 border border-border">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 gap-4">
               <div>
-                <h3 className="text-2xl font-black text-foreground mb-2">Our Fleet in Action</h3>
-                <p className="text-muted-foreground">See our equipment and operators delivering excellence across industries</p>
+                <h3 className="text-xl md:text-2xl font-black text-foreground mb-2">Serving Key Industries</h3>
+                <p className="text-muted-foreground text-sm md:text-base">Our equipment and operators delivering excellence across sectors</p>
               </div>
-              <Link to="/services">
-                <Button variant="default" className="font-bold">
+              <Link to="/products">
+                <Button variant="default" className="font-bold w-full md:w-auto">
                   View Full Fleet
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
               {forkliftShowcase.map((item, index) => (
                 <div
                   key={index}
@@ -227,8 +227,8 @@ const Index = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <span className="inline-block px-3 py-1 bg-primary/90 text-primary-foreground text-sm font-semibold rounded-full">
+                  <div className="absolute bottom-0 left-0 right-0 p-2 md:p-4">
+                    <span className="inline-block px-2 md:px-3 py-1 bg-primary/90 text-primary-foreground text-xs md:text-sm font-semibold rounded-full">
                       {item.label}
                     </span>
                   </div>
@@ -256,7 +256,7 @@ const Index = () => {
       
       {/* Services Section with Expandable Cards */}
       <section className="section-padding bg-background relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blob-shape" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blob-shape pointer-events-none" />
         
         <div className="container-custom relative z-10">
           <div className="text-center mb-16">
@@ -312,7 +312,7 @@ const Index = () => {
 
       {/* About Preview with Accordion */}
       <section className="section-padding bg-muted/30 relative overflow-hidden">
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 blob-shape-2" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 blob-shape-2 pointer-events-none" />
         
         <div className="container-custom relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -361,8 +361,8 @@ const Index = () => {
       <PartnersSection />
 
       {/* CTA Section */}
-      <section className="py-28 bg-gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
+      <section className="py-20 md:py-28 bg-gradient-hero relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 blob-shape animate-blob" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/10 blob-shape-2" />
         </div>

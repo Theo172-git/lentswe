@@ -51,7 +51,7 @@ const ExpandableCard = ({
       )}
       
       {/* Content */}
-      <div className="relative z-10 p-8 md:p-10 min-h-[280px] flex flex-col">
+      <div className="relative z-10 p-6 md:p-10 min-h-[240px] md:min-h-[280px] flex flex-col overflow-hidden">
         {/* Expand button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -75,15 +75,15 @@ const ExpandableCard = ({
         {/* Title area */}
         <div className="mt-auto">
           {subtitle && (
-            <span className="text-white/80 text-lg font-semibold uppercase tracking-wider mb-2 block">
+            <span className="text-white/80 text-sm md:text-lg font-semibold uppercase tracking-wider mb-1 md:mb-2 block">
               {subtitle}
             </span>
           )}
-          <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-2">
+          <h3 className="text-2xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-1 md:mb-2">
             {title}
           </h3>
           {description && !isOpen && (
-            <p className="text-white/70 text-lg font-medium mt-4 line-clamp-2">
+            <p className="text-white/70 text-sm md:text-lg font-medium mt-2 md:mt-4 line-clamp-2">
               {description}
             </p>
           )}
@@ -93,11 +93,11 @@ const ExpandableCard = ({
         <div
           className={cn(
             "overflow-hidden transition-all duration-500 ease-in-out",
-            isOpen ? "max-h-[600px] opacity-100 mt-6" : "max-h-0 opacity-0"
+            isOpen ? "max-h-[800px] opacity-100 mt-4 md:mt-6" : "max-h-0 opacity-0"
           )}
         >
           {description && (
-            <p className="text-white/90 text-xl font-medium leading-relaxed mb-6">
+            <p className="text-white/90 text-base md:text-xl font-medium leading-relaxed mb-4 md:mb-6">
               {description}
             </p>
           )}
