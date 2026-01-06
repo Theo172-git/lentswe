@@ -70,16 +70,16 @@ const HeroSection = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 max-w-4xl mx-auto animate-fade-in-up animation-delay-400">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 max-w-4xl mx-auto animate-fade-in-up animation-delay-400">
             {[
               { value: "3+", label: "Years Experience" },
-              { value: "10+", label: "Clients Serviced" },
-              { value: "98%", label: "SLA Execution Rate" },
+              { value: "100%", label: "Black Owned" },
+              { value: "98%", label: "Breakdowns Resolved within SLA" },
               { value: "24/7", label: "Breakdown Support" },
             ].map((stat, index) => (
-              <div key={index} className="text-center p-4 bg-background/30 backdrop-blur-sm rounded-2xl border border-border/20">
-                <div className="text-4xl md:text-5xl lg:text-6xl font-black text-primary mb-2">{stat.value}</div>
-                <div className="text-base md:text-lg font-bold text-primary-foreground/60 uppercase tracking-wide">{stat.label}</div>
+              <div key={index} className="text-center p-3 md:p-4 bg-background/30 backdrop-blur-sm rounded-2xl border border-border/20">
+                <div className="text-3xl md:text-5xl lg:text-6xl font-black text-primary mb-1 md:mb-2">{stat.value}</div>
+                <div className="text-xs md:text-base font-bold text-primary-foreground/60 uppercase tracking-wide leading-tight">{stat.label}</div>
               </div>
             ))}
           </div>
