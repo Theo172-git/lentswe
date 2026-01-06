@@ -1,4 +1,4 @@
-import { ArrowRight, ChevronDown, Shield, Award } from "lucide-react";
+import { ArrowRight, Shield, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import heroBgImg from "@/assets/hero-bg.jpg";
@@ -85,15 +85,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <a
-        href="#services"
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-primary-foreground/50 hover:text-primary transition-colors animate-bounce"
-      >
-        <span className="text-sm uppercase tracking-[0.2em] font-black">Scroll</span>
-        <ChevronDown className="w-6 h-6" />
-      </a>
     </section>
   );
 };

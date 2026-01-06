@@ -535,7 +535,20 @@ const Admin = () => {
                           onChange={(e) => setForkliftForm({...forkliftForm, image_url: e.target.value})}
                           placeholder="/forklift-1.jpg or full URL"
                         />
-                        <p className="text-xs text-muted-foreground mt-1">Use /forklift-1.jpg through /forklift-6.jpg for local images</p>
+                        <p className="text-xs text-muted-foreground mt-1">Use /forklift-1.jpg through /forklift-6.jpg for local images, or paste any external image URL</p>
+                        {forkliftForm.image_url && (
+                          <div className="mt-3 p-3 bg-muted/30 rounded-lg">
+                            <p className="text-xs text-muted-foreground mb-2">Image Preview:</p>
+                            <img 
+                              src={forkliftForm.image_url.startsWith('/') ? undefined : forkliftForm.image_url}
+                              alt="Preview"
+                              className="w-full h-32 object-contain rounded-lg bg-muted"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23666">Local Image</text></svg>';
+                              }}
+                            />
+                          </div>
+                        )}
                       </div>
                       <div className="grid grid-cols-3 gap-4">
                         <div>

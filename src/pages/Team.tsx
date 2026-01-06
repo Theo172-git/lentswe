@@ -8,7 +8,7 @@ import reabetsweImg from "@/assets/reabetswe-liale.png";
 
 const teamMembers = [
   {
-    name: "Reabetswe Liale",
+    name: "Reabetswe Llale",
     role: "Director",
     position: "Managing Director & CEO",
     bio: "A visionary leader with over a decade of experience in the materials handling industry, driving sustainable growth and innovation.",
