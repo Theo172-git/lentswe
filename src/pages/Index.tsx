@@ -22,6 +22,8 @@ import portfolio7 from "@/assets/portfolio-7.jpg";
 import driverForklift1 from "@/assets/driver-forklift-1.jpg";
 import driverForklift2 from "@/assets/driver-forklift-2.jpg";
 import driverForklift3 from "@/assets/driver-forklift-3.jpg";
+import machinery3 from "@/assets/machinery-3.jpg";
+import machinery11 from "@/assets/machinery-11.jpg";
 
 const portfolioImages = [
   { src: portfolio1, alt: "Lentswe Operations 1" },
@@ -131,6 +133,19 @@ const Index = () => {
       
       {/* Forklift Rental Marketplace */}
       <ForkliftMarketplace />
+
+      {/* Image Divider */}
+      <section className="py-0">
+        <div className="container-custom">
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border">
+            <img 
+              src={machinery3} 
+              alt="Lentswe Heavy Equipment" 
+              className="w-full h-64 md:h-96 object-cover"
+            />
+          </div>
+        </div>
+      </section>
 
       <section className="section-padding bg-muted/20 relative overflow-hidden">
         <div className="container-custom relative z-10">
@@ -269,7 +284,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
             {services.map((service, index) => (
               <ExpandableCard
                 key={index}
@@ -297,6 +312,15 @@ const Index = () => {
                 </Link>
               </ExpandableCard>
             ))}
+          </div>
+
+          {/* Image Divider */}
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border mb-12">
+            <img 
+              src={machinery11} 
+              alt="Lentswe Fleet" 
+              className="w-full h-64 md:h-80 object-cover"
+            />
           </div>
 
           <div className="text-center">

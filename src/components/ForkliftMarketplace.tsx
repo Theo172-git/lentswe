@@ -277,10 +277,10 @@ Thank you!`;
             <span className="text-sm font-bold text-primary uppercase tracking-wider">Premium Fleet</span>
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-6">
-            Rent Quality <span className="text-gradient">Forklifts</span>
+            Materials Handling <span className="text-gradient">Solutions</span>
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4 leading-relaxed">
-            Browse our fleet of well-maintained forklifts. Request a quote and we'll get back to you promptly.
+            Browse our fleet of quality equipment. Request a quote and we'll get back to you promptly.
           </p>
           
           {/* Enhanced Eco Badge */}

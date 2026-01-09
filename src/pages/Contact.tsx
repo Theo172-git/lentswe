@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ExpandableCard from "@/components/ExpandableCard";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import machinery4 from "@/assets/machinery-4.jpg";
+import machinery10 from "@/assets/machinery-10.jpg";
 
 const contactInfo = [
   {
@@ -54,20 +56,24 @@ const Contact = () => {
     <main className="min-h-screen">
       <Navbar />
       
-      {/* Hero Banner */}
-      <section className="pt-40 pb-24 bg-gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 blob-shape animate-blob" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/10 blob-shape-2" />
+      {/* Hero Banner with Image */}
+      <section className="relative pt-32 pb-24 overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={machinery4} 
+            alt="" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
         </div>
-        <div className="container-custom relative z-10 text-center">
-          <span className="inline-block text-base font-black text-primary uppercase tracking-[0.2em] mb-6 px-6 py-3 bg-primary/10 rounded-full border border-primary/20">
+        <div className="container-custom relative z-10 text-center py-8">
+          <span className="inline-block text-base font-black text-primary uppercase tracking-[0.2em] mb-6 px-6 py-3 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
             Get In Touch
           </span>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-primary-foreground mb-8">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-8 drop-shadow-lg">
             Let's Work <span className="text-gradient">Together</span>
           </h1>
-          <p className="text-xl md:text-2xl text-primary-foreground/70 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
             Ready to elevate your operations? Contact us for personalized solutions
           </p>
         </div>
@@ -75,8 +81,8 @@ const Contact = () => {
 
       {/* Contact Section */}
       <section className="section-padding bg-background relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 blob-shape" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-secondary/5 blob-shape-2" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 blob-shape pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-secondary/5 blob-shape-2 pointer-events-none" />
 
         <div className="container-custom relative z-10">
           <div className="grid lg:grid-cols-2 gap-16">
@@ -89,7 +95,7 @@ const Contact = () => {
                 We'd love to hear from you. Get in touch with us using any of the methods below.
               </p>
 
-              <Accordion type="multiple" defaultValue={["item-0", "item-1"]} className="space-y-4">
+              <Accordion type="multiple" defaultValue={["item-0", "item-1"]} className="space-y-4 mb-10">
                 {contactInfo.map((item, index) => (
                   <AccordionItem 
                     key={index} 
@@ -126,6 +132,15 @@ const Contact = () => {
                   </AccordionItem>
                 ))}
               </Accordion>
+
+              {/* Image */}
+              <div className="rounded-2xl overflow-hidden shadow-card border border-border">
+                <img 
+                  src={machinery10} 
+                  alt="Lentswe Operations" 
+                  className="w-full h-48 object-cover"
+                />
+              </div>
             </div>
 
             {/* Contact Form */}
