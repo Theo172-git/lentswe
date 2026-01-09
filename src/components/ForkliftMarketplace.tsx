@@ -333,14 +333,19 @@ Thank you!`;
                   key={product.id}
                   className="group bg-card rounded-2xl sm:rounded-3xl border-2 border-border overflow-hidden hover:shadow-2xl hover:border-primary/40 transition-all duration-500 hover:-translate-y-2"
                 >
-                  {/* Enhanced Image */}
-                  <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/50 to-muted">
+                  {/* Enhanced Image - High quality, no blur */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-muted/20">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-contain bg-muted/30 group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-contain bg-muted/10 group-hover:scale-103 transition-transform duration-500 will-change-transform"
+                      style={{ 
+                        imageRendering: 'crisp-edges',
+                        transform: 'translateZ(0)',
+                      }}
+                      loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     {product.ecoFriendly && (
                       <div className="absolute top-3 sm:top-4 left-3 sm:left-4">
                         <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg text-xs">

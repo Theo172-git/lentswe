@@ -134,15 +134,20 @@ const Index = () => {
       {/* Forklift Rental Marketplace */}
       <ForkliftMarketplace />
 
-      {/* Image Divider */}
-      <section className="py-4">
+      {/* Image Divider - Clean, full-width, no crop */}
+      <section className="py-6">
         <div className="container-custom">
-          <div className="rounded-3xl overflow-hidden shadow-card border border-border bg-muted flex items-center justify-center">
+          <div className="rounded-2xl overflow-hidden shadow-xl border border-border/50 bg-muted/30">
             <img 
               src={machinery3} 
               alt="Lentswe Heavy Equipment" 
-              className="w-full h-auto object-contain"
-              style={{ maxHeight: '450px', imageRendering: 'auto' }}
+              className="w-full h-auto object-contain will-change-transform"
+              style={{ 
+                maxHeight: '500px',
+                imageRendering: 'crisp-edges',
+                transform: 'translateZ(0)',
+              }}
+              loading="lazy"
             />
           </div>
         </div>
@@ -164,14 +169,19 @@ const Index = () => {
             {portfolioImages.map((image, index) => (
               <div
                 key={index}
-                className="group relative rounded-2xl overflow-hidden shadow-card hover:shadow-glow transition-all duration-500 aspect-square"
+                className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 aspect-square"
               >
                 <img
                   src={image.src}
                   alt={image.alt}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
+                  style={{ 
+                    imageRendering: 'crisp-edges',
+                    transform: 'translateZ(0)',
+                  }}
+                  loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             ))}
           </div>
@@ -235,16 +245,22 @@ const Index = () => {
               {forkliftShowcase.map((item, index) => (
                 <div
                   key={index}
-                  className="group relative rounded-xl overflow-hidden aspect-[4/3] shadow-card hover:shadow-glow transition-all duration-500"
+                  className="group relative rounded-xl overflow-hidden aspect-[4/3] shadow-lg hover:shadow-xl transition-all duration-500"
                 >
                   <img
                     src={item.src}
                     alt={item.label}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 will-change-transform"
+                    style={{ 
+                      imageRendering: 'crisp-edges',
+                      transform: 'translateZ(0)',
+                    }}
+                    loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  {/* Subtle gradient - less aggressive overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-2 md:p-4">
-                    <span className="inline-block px-2 md:px-3 py-1 bg-primary/90 text-primary-foreground text-xs md:text-sm font-semibold rounded-full">
+                    <span className="inline-block px-2 md:px-3 py-1 bg-primary text-primary-foreground text-xs md:text-sm font-semibold rounded-full shadow-md">
                       {item.label}
                     </span>
                   </div>
@@ -315,13 +331,18 @@ const Index = () => {
             ))}
           </div>
 
-          {/* Image Divider */}
-          <div className="rounded-3xl overflow-hidden shadow-card border border-border mb-12 bg-muted flex items-center justify-center">
+          {/* Image Divider - Clean, full view */}
+          <div className="rounded-2xl overflow-hidden shadow-xl border border-border/50 mb-12 bg-muted/30">
             <img 
               src={machinery11} 
               alt="Lentswe Fleet" 
-              className="w-full h-auto object-contain"
-              style={{ maxHeight: '450px', imageRendering: 'auto' }}
+              className="w-full h-auto object-contain will-change-transform"
+              style={{ 
+                maxHeight: '500px',
+                imageRendering: 'crisp-edges',
+                transform: 'translateZ(0)',
+              }}
+              loading="lazy"
             />
           </div>
 
