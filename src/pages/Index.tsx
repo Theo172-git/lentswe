@@ -135,13 +135,14 @@ const Index = () => {
       <ForkliftMarketplace />
 
       {/* Image Divider */}
-      <section className="py-0">
+      <section className="py-4">
         <div className="container-custom">
-          <div className="rounded-3xl overflow-hidden shadow-card border border-border bg-muted">
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border bg-muted flex items-center justify-center">
             <img 
               src={machinery3} 
               alt="Lentswe Heavy Equipment" 
-              className="w-full h-auto max-h-96 object-contain"
+              className="w-full h-auto object-contain"
+              style={{ maxHeight: '450px', imageRendering: 'auto' }}
             />
           </div>
         </div>
@@ -315,11 +316,12 @@ const Index = () => {
           </div>
 
           {/* Image Divider */}
-          <div className="rounded-3xl overflow-hidden shadow-card border border-border mb-12 bg-muted">
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border mb-12 bg-muted flex items-center justify-center">
             <img 
               src={machinery11} 
               alt="Lentswe Fleet" 
-              className="w-full h-auto max-h-80 object-contain"
+              className="w-full h-auto object-contain"
+              style={{ maxHeight: '450px', imageRendering: 'auto' }}
             />
           </div>
 

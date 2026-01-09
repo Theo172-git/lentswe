@@ -25,12 +25,13 @@ const PartnersSection = () => {
           </div>
         </div>
 
-        {/* Partners Logo Image */}
+        {/* Partners Logo Image - just the logos, no redundant title */}
         <div className="bg-card rounded-3xl p-8 md:p-12 shadow-card border border-border mb-12 max-w-4xl mx-auto">
           <img 
             src={partnersImg} 
-            alt="Our Strategic Partners - TD Dimati Projects and Kempston Group" 
-            className="w-full h-auto object-contain"
+            alt="TD Dimati Projects, Kempston Group, The Gas Box, Clark, Implats - Our Strategic Partners and Clients" 
+            className="w-full h-auto object-contain max-h-[500px]"
+            style={{ imageRendering: 'auto' }}
           />
         </div>
 

@@ -6,16 +6,21 @@ import heroBgImg from "@/assets/hero-bg.jpg";
 const HeroSection = () => {
   return (
     <section id="home" className="relative min-h-screen flex items-end overflow-hidden" aria-label="Hero section">
-      {/* Background Image - Clean, full quality, no blur */}
+      {/* Background Image - Full quality, crisp, no blur */}
       <div className="absolute inset-0" aria-hidden="true">
         <img 
           src={heroBgImg} 
           alt="" 
           className="w-full h-full object-cover"
-          style={{ objectPosition: 'center 30%' }}
+          style={{ 
+            objectPosition: 'center 40%',
+            imageRendering: 'auto',
+            WebkitBackfaceVisibility: 'hidden',
+            backfaceVisibility: 'hidden'
+          }}
         />
-        {/* Very subtle gradient for text readability only */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        {/* Subtle gradient for text readability - less aggressive */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10" />
       </div>
 
       <div className="container-custom relative z-10 pb-16 md:pb-24 pt-32">
