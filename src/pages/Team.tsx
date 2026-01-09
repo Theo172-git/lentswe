@@ -5,6 +5,7 @@ import ExpandableCard from "@/components/ExpandableCard";
 import PartnersSection from "@/components/PartnersSection";
 import mpapiImg from "@/assets/mpapi-tsomele.png";
 import reabetsweImg from "@/assets/reabetswe-liale.png";
+import teamPhoto from "@/assets/team-photo.jpg";
 
 const teamMembers = [
   {
@@ -46,6 +47,19 @@ const Team = () => {
           <p className="text-xl md:text-2xl text-primary-foreground/70 max-w-3xl mx-auto leading-relaxed">
             Experienced professionals driving innovation and excellence
           </p>
+        </div>
+      </section>
+
+      {/* Team Photo Section */}
+      <section className="py-12 bg-background">
+        <div className="container-custom">
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border">
+            <img 
+              src={teamPhoto} 
+              alt="Lentswe Team" 
+              className="w-full h-auto max-h-[500px] object-contain bg-muted"
+            />
+          </div>
         </div>
       </section>
 
