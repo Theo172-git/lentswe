@@ -25,10 +25,10 @@ const HeroSection = () => {
 
       <div className="container-custom relative z-10 pb-16 md:pb-24 pt-32">
         <div className="max-w-4xl">
-          {/* Badge - shifted down */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30 mb-6 animate-fade-in">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-            <span className="text-xs md:text-sm font-bold text-primary tracking-wide uppercase">Sustainable Solutions Provider</span>
+          {/* Badge - clean, no blur */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary rounded-full mb-6 animate-fade-in">
+            <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+            <span className="text-xs md:text-sm font-bold text-white tracking-wide uppercase">Sustainable Solutions Provider</span>
           </div>
 
           {/* Main Heading - reduced size */}
