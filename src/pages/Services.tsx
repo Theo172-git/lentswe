@@ -9,6 +9,9 @@ import forkliftImg from "@/assets/forklift-warehouse.jpg";
 import machineryImg from "@/assets/heavy-machinery.jpg";
 import transportImg from "@/assets/transport-truck.jpg";
 import energyImg from "@/assets/energy-lpg.jpg";
+import machinery3 from "@/assets/machinery-3.jpg";
+import machinery6 from "@/assets/machinery-6.jpg";
+import machinery9 from "@/assets/machinery-9.jpg";
 
 const services = [
   {
@@ -73,20 +76,24 @@ const Services = () => {
     <main className="min-h-screen">
       <Navbar />
       
-      {/* Hero Banner */}
-      <section className="pt-40 pb-24 bg-gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 blob-shape animate-blob" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/10 blob-shape-2" />
+      {/* Hero Banner with Image */}
+      <section className="relative pt-32 pb-24 overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={machinery3} 
+            alt="" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
         </div>
-        <div className="container-custom relative z-10 text-center">
-          <span className="inline-block text-base font-black text-primary uppercase tracking-[0.2em] mb-6 px-6 py-3 bg-primary/10 rounded-full border border-primary/20">
+        <div className="container-custom relative z-10 text-center py-8">
+          <span className="inline-block text-base font-black text-primary uppercase tracking-[0.2em] mb-6 px-6 py-3 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
             What We Offer
           </span>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-primary-foreground mb-8">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-8 drop-shadow-lg">
             Our <span className="text-gradient">Services</span>
           </h1>
-          <p className="text-xl md:text-2xl text-primary-foreground/70 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
             Comprehensive solutions designed to meet the unique demands of modern industry
           </p>
         </div>
@@ -94,11 +101,11 @@ const Services = () => {
 
       {/* Services Grid with Expandable Cards */}
       <section className="section-padding bg-background relative overflow-hidden">
-        <div className="absolute top-1/2 right-0 w-80 h-80 bg-primary/5 blob-shape translate-x-1/2" />
-        <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-secondary/5 blob-shape-2" />
+        <div className="absolute top-1/2 right-0 w-80 h-80 bg-primary/5 blob-shape translate-x-1/2 pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-secondary/5 blob-shape-2 pointer-events-none" />
 
         <div className="container-custom relative z-10">
-          <div className="grid md:grid-cols-2 gap-10 mb-20">
+          <div className="grid md:grid-cols-2 gap-10 mb-16">
             {services.map((service, index) => (
               <ExpandableCard
                 key={index}
@@ -129,8 +136,17 @@ const Services = () => {
             ))}
           </div>
 
+          {/* Image Divider */}
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border mb-16">
+            <img 
+              src={machinery6} 
+              alt="Lentswe Equipment Fleet" 
+              className="w-full h-64 md:h-80 object-cover"
+            />
+          </div>
+
           {/* Additional Info Accordion */}
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-black text-foreground text-center mb-10">
               More <span className="text-gradient">Information</span>
             </h2>
@@ -151,12 +167,21 @@ const Services = () => {
               ))}
             </Accordion>
           </div>
+
+          {/* Bottom Image */}
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border">
+            <img 
+              src={machinery9} 
+              alt="Lentswe Operations" 
+              className="w-full h-64 md:h-80 object-cover"
+            />
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="py-28 bg-gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 blob-shape" />
         </div>
         <div className="container-custom relative z-10 text-center">

@@ -3,26 +3,33 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ExpandableCard from "@/components/ExpandableCard";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import machinery2 from "@/assets/machinery-2.jpg";
+import machinery5 from "@/assets/machinery-5.jpg";
+import machinery8 from "@/assets/machinery-8.jpg";
 
 const About = () => {
   return (
     <main className="min-h-screen">
       <Navbar />
       
-      {/* Hero Banner */}
-      <section className="pt-40 pb-24 bg-gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 right-0 w-96 h-96 bg-primary/10 blob-shape animate-blob" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/10 blob-shape-2" />
+      {/* Hero Banner with Image */}
+      <section className="relative pt-32 pb-24 overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={machinery2} 
+            alt="" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
         </div>
-        <div className="container-custom relative z-10 text-center">
-          <span className="inline-block text-base font-black text-primary uppercase tracking-[0.2em] mb-6 px-6 py-3 bg-primary/10 rounded-full border border-primary/20">
+        <div className="container-custom relative z-10 text-center py-8">
+          <span className="inline-block text-base font-black text-primary uppercase tracking-[0.2em] mb-6 px-6 py-3 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
             About Us
           </span>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-primary-foreground mb-8">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-8 drop-shadow-lg">
             Building <span className="text-gradient">Sustainable</span> Futures
           </h1>
-          <p className="text-xl md:text-2xl text-primary-foreground/70 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
             Your trusted partner in materials handling, heavy machinery, transportation, and energy solutions
           </p>
         </div>
@@ -30,10 +37,10 @@ const About = () => {
 
       {/* Vision & Mission with Expandable Cards */}
       <section className="section-padding bg-background relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blob-shape" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blob-shape pointer-events-none" />
         
         <div className="container-custom relative z-10">
-          <div className="grid md:grid-cols-2 gap-10 mb-24">
+          <div className="grid md:grid-cols-2 gap-10 mb-16">
             {/* Vision Card */}
             <ExpandableCard
               title="Our Vision"
@@ -63,6 +70,15 @@ const About = () => {
             </ExpandableCard>
           </div>
 
+          {/* Image Divider */}
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border mb-16">
+            <img 
+              src={machinery5} 
+              alt="Lentswe Heavy Machinery Operations" 
+              className="w-full h-64 md:h-96 object-cover"
+            />
+          </div>
+
           {/* Core Values with Accordion */}
           <div className="text-center mb-12">
             <span className="section-subtitle">Our Principles</span>
@@ -71,7 +87,7 @@ const About = () => {
             </h2>
           </div>
 
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto mb-16">
             <Accordion type="single" collapsible className="space-y-4">
               {[
                 {
@@ -118,6 +134,15 @@ const About = () => {
                 </AccordionItem>
               ))}
             </Accordion>
+          </div>
+
+          {/* Bottom Image */}
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border">
+            <img 
+              src={machinery8} 
+              alt="Lentswe Team at Work" 
+              className="w-full h-64 md:h-80 object-cover"
+            />
           </div>
         </div>
       </section>
