@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { 
   LogOut, Users, Package, AlertTriangle, MessageSquare, 
   ArrowLeft, Loader2, CheckCircle, XCircle, Clock, Eye, 
-  Forklift, Plus, Edit, Trash2, Save, X
+  Forklift, Plus, Edit, Trash2, Save, X, FolderTree
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -88,6 +88,19 @@ interface Forklift {
   price_monthly: number;
   eco_friendly: boolean;
   is_available: boolean;
+  category_id: string | null;
+  created_at: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  image_url: string | null;
+  parent_id: string | null;
+  sort_order: number;
+  is_active: boolean;
   created_at: string;
 }
 
@@ -96,13 +109,14 @@ const Admin = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<"forklifts" | "users" | "rentals" | "breakdowns" | "support">("forklifts");
+  const [activeTab, setActiveTab] = useState<"categories" | "forklifts" | "users" | "rentals" | "breakdowns" | "support">("categories");
   
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [breakdowns, setBreakdowns] = useState<BreakdownReport[]>([]);
   const [supportRequests, setSupportRequests] = useState<SupportRequest[]>([]);
   const [forklifts, setForklifts] = useState<Forklift[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   
   const [editingForklift, setEditingForklift] = useState<Forklift | null>(null);
   const [isForkliftDialogOpen, setIsForkliftDialogOpen] = useState(false);
@@ -117,6 +131,19 @@ const Admin = () => {
     price_monthly: 0,
     eco_friendly: true,
     is_available: true,
+    category_id: "",
+  });
+  
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+  const [categoryForm, setCategoryForm] = useState({
+    name: "",
+    slug: "",
+    description: "",
+    image_url: "",
+    parent_id: "",
+    sort_order: 0,
+    is_active: true,
   });
   
   const navigate = useNavigate();
@@ -172,12 +199,13 @@ const Admin = () => {
 
   const fetchAllData = async () => {
     try {
-      const [usersRes, rentalsRes, breakdownsRes, supportRes, forkliftsRes] = await Promise.all([
+      const [usersRes, rentalsRes, breakdownsRes, supportRes, forkliftsRes, categoriesRes] = await Promise.all([
         supabase.from("profiles").select("*").order("created_at", { ascending: false }),
         supabase.from("rentals").select("*").order("created_at", { ascending: false }),
         supabase.from("breakdown_reports").select("*").order("created_at", { ascending: false }),
         supabase.from("support_requests").select("*").order("created_at", { ascending: false }),
         supabase.from("forklifts").select("*").order("created_at", { ascending: true }),
+        supabase.from("categories").select("*").order("sort_order", { ascending: true }),
       ]);
 
       setUsers(usersRes.data || []);
@@ -185,6 +213,7 @@ const Admin = () => {
       setBreakdowns(breakdownsRes.data || []);
       setSupportRequests(supportRes.data || []);
       setForklifts(forkliftsRes.data || []);
+      setCategories((categoriesRes.data || []) as Category[]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -259,6 +288,7 @@ const Admin = () => {
         price_monthly: Number(forklift.price_monthly),
         eco_friendly: forklift.eco_friendly,
         is_available: forklift.is_available,
+        category_id: forklift.category_id || "",
       });
     } else {
       setEditingForklift(null);
@@ -273,9 +303,104 @@ const Admin = () => {
         price_monthly: 0,
         eco_friendly: true,
         is_available: true,
+        category_id: "",
       });
     }
     setIsForkliftDialogOpen(true);
+  };
+
+  const openCategoryDialog = (category?: Category) => {
+    if (category) {
+      setEditingCategory(category);
+      setCategoryForm({
+        name: category.name,
+        slug: category.slug,
+        description: category.description || "",
+        image_url: category.image_url || "",
+        parent_id: category.parent_id || "",
+        sort_order: category.sort_order || 0,
+        is_active: category.is_active,
+      });
+    } else {
+      setEditingCategory(null);
+      setCategoryForm({
+        name: "",
+        slug: "",
+        description: "",
+        image_url: "",
+        parent_id: "",
+        sort_order: 0,
+        is_active: true,
+      });
+    }
+    setIsCategoryDialogOpen(true);
+  };
+
+  const saveCategory = async () => {
+    try {
+      const dataToSave = {
+        ...categoryForm,
+        parent_id: categoryForm.parent_id || null,
+      };
+      
+      if (editingCategory) {
+        const { error } = await supabase
+          .from("categories")
+          .update(dataToSave)
+          .eq("id", editingCategory.id);
+        
+        if (error) throw error;
+        toast.success("Category updated successfully");
+      } else {
+        const { error } = await supabase
+          .from("categories")
+          .insert([dataToSave]);
+        
+        if (error) throw error;
+        toast.success("Category added successfully");
+      }
+      
+      setIsCategoryDialogOpen(false);
+      fetchAllData();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const deleteCategory = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this category? Equipment in this category will be unassigned.")) return;
+    
+    try {
+      const { error } = await supabase
+        .from("categories")
+        .delete()
+        .eq("id", id);
+      
+      if (error) throw error;
+      toast.success("Category deleted");
+      fetchAllData();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const toggleCategoryActive = async (id: string, isActive: boolean) => {
+    try {
+      const { error } = await supabase
+        .from("categories")
+        .update({ is_active: !isActive })
+        .eq("id", id);
+      
+      if (error) throw error;
+      toast.success(`Category ${!isActive ? "enabled" : "disabled"}`);
+      fetchAllData();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const generateSlug = (name: string) => {
+    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
   };
 
   const saveForklift = async () => {
@@ -382,15 +507,16 @@ const Admin = () => {
               </Link>
               <div>
                 <h1 className="text-3xl font-bold text-foreground">Admin Panel</h1>
-                <p className="text-muted-foreground">Manage forklifts, users, rentals, breakdowns, and support</p>
+                <p className="text-muted-foreground">Manage categories, equipment, users, rentals, and support</p>
               </div>
             </div>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
             {[
-              { icon: Forklift, label: "Forklifts", value: forklifts.length, color: "primary" },
+              { icon: FolderTree, label: "Categories", value: categories.length, color: "primary" },
+              { icon: Forklift, label: "Equipment", value: forklifts.length, color: "primary" },
               { icon: Users, label: "Total Users", value: users.length, color: "teal" },
               { icon: Package, label: "Total Rentals", value: rentals.length, color: "violet" },
               { icon: AlertTriangle, label: "Open Breakdowns", value: breakdowns.filter(b => b.status !== "resolved").length, color: "amber" },
@@ -409,7 +535,8 @@ const Admin = () => {
           {/* Tabs */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
             {[
-              { key: "forklifts", label: "Forklifts", icon: Forklift },
+              { key: "categories", label: "Categories", icon: FolderTree },
+              { key: "forklifts", label: "Equipment", icon: Forklift },
               { key: "users", label: "Users", icon: Users },
               { key: "rentals", label: "Rentals", icon: Package },
               { key: "breakdowns", label: "Breakdowns", icon: AlertTriangle },
@@ -432,6 +559,156 @@ const Admin = () => {
 
           {/* Content */}
           <div className="bg-card rounded-3xl border border-border p-4 sm:p-6">
+            {/* Categories Tab */}
+            {activeTab === "categories" && (
+              <div>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                  <h2 className="text-xl font-bold">Manage Categories ({categories.length})</h2>
+                  <Button onClick={() => openCategoryDialog()} className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    Add Category
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {categories.map((category) => {
+                    const parentCategory = categories.find(c => c.id === category.parent_id);
+                    return (
+                      <div key={category.id} className={`p-4 rounded-xl border ${category.is_active ? 'bg-muted/30 border-border' : 'bg-red-500/5 border-red-500/20'}`}>
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-foreground truncate">{category.name}</h3>
+                            <p className="text-sm text-muted-foreground">/{category.slug}</p>
+                            {parentCategory && (
+                              <p className="text-xs text-primary">↳ Subcategory of {parentCategory.name}</p>
+                            )}
+                          </div>
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${category.is_active ? 'bg-emerald-500/10 text-emerald-600' : 'bg-red-500/10 text-red-600'}`}>
+                            {category.is_active ? "Active" : "Inactive"}
+                          </span>
+                        </div>
+                        
+                        {category.description && (
+                          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{category.description}</p>
+                        )}
+                        
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" onClick={() => openCategoryDialog(category)} className="flex-1 gap-1">
+                            <Edit className="w-3 h-3" />
+                            Edit
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => toggleCategoryActive(category.id, category.is_active)}>
+                            {category.is_active ? <XCircle className="w-3 h-3" /> : <CheckCircle className="w-3 h-3" />}
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => deleteCategory(category.id)} className="text-destructive hover:text-destructive">
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Category Dialog */}
+                <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+                  <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>{editingCategory ? "Edit Category" : "Add New Category"}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <label className="text-sm font-medium">Name</label>
+                        <Input 
+                          value={categoryForm.name}
+                          onChange={(e) => {
+                            const name = e.target.value;
+                            setCategoryForm({
+                              ...categoryForm, 
+                              name,
+                              slug: !editingCategory ? generateSlug(name) : categoryForm.slug
+                            });
+                          }}
+                          placeholder="Category name"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Slug (URL-friendly)</label>
+                        <Input 
+                          value={categoryForm.slug}
+                          onChange={(e) => setCategoryForm({...categoryForm, slug: e.target.value})}
+                          placeholder="category-slug"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Parent Category (Optional)</label>
+                        <Select 
+                          value={categoryForm.parent_id}
+                          onValueChange={(v) => setCategoryForm({...categoryForm, parent_id: v === "none" ? "" : v})}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="None (Top-level category)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None (Top-level category)</SelectItem>
+                            {categories.filter(c => c.id !== editingCategory?.id && !c.parent_id).map(c => (
+                              <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Description</label>
+                        <Textarea 
+                          value={categoryForm.description}
+                          onChange={(e) => setCategoryForm({...categoryForm, description: e.target.value})}
+                          placeholder="Category description"
+                          rows={3}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Image URL (Optional)</label>
+                        <Input 
+                          value={categoryForm.image_url}
+                          onChange={(e) => setCategoryForm({...categoryForm, image_url: e.target.value})}
+                          placeholder="https://example.com/image.jpg"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium">Sort Order</label>
+                          <Input 
+                            type="number"
+                            value={categoryForm.sort_order}
+                            onChange={(e) => setCategoryForm({...categoryForm, sort_order: Number(e.target.value)})}
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <label className="flex items-center gap-2 pb-2">
+                            <input 
+                              type="checkbox"
+                              checked={categoryForm.is_active}
+                              onChange={(e) => setCategoryForm({...categoryForm, is_active: e.target.checked})}
+                              className="rounded"
+                            />
+                            <span className="text-sm">Active</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div className="flex gap-3 pt-4">
+                        <Button onClick={saveCategory} className="flex-1 gap-2">
+                          <Save className="w-4 h-4" />
+                          {editingCategory ? "Update" : "Create"}
+                        </Button>
+                        <Button variant="outline" onClick={() => setIsCategoryDialogOpen(false)}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
+
             {/* Forklifts Tab */}
             {activeTab === "forklifts" && (
               <div>

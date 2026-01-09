@@ -1,10 +1,6 @@
 import { Handshake } from "lucide-react";
+import partnersImg from "@/assets/partners-clients.png";
 import machinery7 from "@/assets/machinery-7.jpg";
-
-const partners = [
-  { name: "TD Dimati Projects", logo: "TD" },
-  { name: "Kempston Group", logo: "KG" },
-];
 
 const PartnersSection = () => {
   return (
@@ -29,19 +25,13 @@ const PartnersSection = () => {
           </div>
         </div>
 
-        {/* Partners Grid */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
-          {partners.map((partner, index) => (
-            <div 
-              key={index}
-              className="bg-card rounded-2xl p-8 shadow-card border border-border hover:shadow-glow hover:border-primary/30 transition-all duration-300 text-center"
-            >
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto mb-4 text-2xl font-black text-white">
-                {partner.logo}
-              </div>
-              <h3 className="text-xl font-bold text-foreground">{partner.name}</h3>
-            </div>
-          ))}
+        {/* Partners Logo Image */}
+        <div className="bg-card rounded-3xl p-8 md:p-12 shadow-card border border-border mb-12 max-w-4xl mx-auto">
+          <img 
+            src={partnersImg} 
+            alt="Our Strategic Partners - TD Dimati Projects and Kempston Group" 
+            className="w-full h-auto object-contain"
+          />
         </div>
 
         {/* Image Divider */}
@@ -49,7 +39,7 @@ const PartnersSection = () => {
           <img 
             src={machinery7} 
             alt="Lentswe Operations Partnership" 
-            className="w-full h-64 md:h-80 object-cover"
+            className="w-full h-64 md:h-80 object-cover object-center"
           />
         </div>
       </div>
