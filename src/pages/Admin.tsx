@@ -9,8 +9,9 @@ import { toast } from "sonner";
 import { 
   LogOut, Users, Package, AlertTriangle, MessageSquare, 
   ArrowLeft, Loader2, CheckCircle, XCircle, Clock, Eye, 
-  Forklift, Plus, Edit, Trash2, Save, X, FolderTree
+  Forklift, Plus, Edit, Trash2, Save, X, FolderTree, FileText
 } from "lucide-react";
+import { CMSPanel } from "@/components/cms";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import {
@@ -109,7 +110,7 @@ const Admin = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<"categories" | "forklifts" | "users" | "rentals" | "breakdowns" | "support">("categories");
+  const [activeTab, setActiveTab] = useState<"cms" | "categories" | "forklifts" | "users" | "rentals" | "breakdowns" | "support">("cms");
   
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [rentals, setRentals] = useState<Rental[]>([]);
@@ -535,6 +536,7 @@ const Admin = () => {
           {/* Tabs */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
             {[
+              { key: "cms", label: "CMS", icon: FileText },
               { key: "categories", label: "Categories", icon: FolderTree },
               { key: "forklifts", label: "Equipment", icon: Forklift },
               { key: "users", label: "Users", icon: Users },
@@ -558,6 +560,11 @@ const Admin = () => {
           </div>
 
           {/* Content */}
+          {activeTab === "cms" && (
+            <div className="bg-card rounded-2xl border border-border p-6">
+              <CMSPanel />
+            </div>
+          )}
           <div className="bg-card rounded-3xl border border-border p-4 sm:p-6">
             {/* Categories Tab */}
             {activeTab === "categories" && (

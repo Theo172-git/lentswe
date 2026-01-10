@@ -117,6 +117,126 @@ export type Database = {
           },
         ]
       }
+      cms_media: {
+        Row: {
+          alt_text: string | null
+          caption: string | null
+          created_at: string
+          file_path: string
+          file_size: number
+          file_url: string
+          filename: string
+          id: string
+          mime_type: string
+          original_filename: string
+          tags: string[] | null
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          alt_text?: string | null
+          caption?: string | null
+          created_at?: string
+          file_path: string
+          file_size: number
+          file_url: string
+          filename: string
+          id?: string
+          mime_type: string
+          original_filename: string
+          tags?: string[] | null
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          alt_text?: string | null
+          caption?: string | null
+          created_at?: string
+          file_path?: string
+          file_size?: number
+          file_url?: string
+          filename?: string
+          id?: string
+          mime_type?: string
+          original_filename?: string
+          tags?: string[] | null
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
+      cms_page_content: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          is_published: boolean
+          page_slug: string
+          published_at: string | null
+          section_key: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          page_slug: string
+          published_at?: string | null
+          section_key: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          page_slug?: string
+          published_at?: string | null
+          section_key?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      cms_site_settings: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          label: string
+          setting_key: string
+          setting_type: string
+          setting_value: Json
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          label: string
+          setting_key: string
+          setting_type?: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          label?: string
+          setting_key?: string
+          setting_type?: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       forklifts: {
         Row: {
           capacity: string
