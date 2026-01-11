@@ -134,16 +134,15 @@ const Index = () => {
       {/* Forklift Rental Marketplace */}
       <ForkliftMarketplace />
 
-      {/* Image Divider - Clean, full-width, no crop */}
+      {/* Image Divider - Full coverage within card bounds */}
       <section className="py-6">
         <div className="container-custom">
-          <div className="rounded-2xl overflow-hidden shadow-xl border border-border/50 bg-muted/30">
+          <div className="rounded-2xl overflow-hidden shadow-xl border border-border/50">
             <img 
               src={machinery3} 
               alt="Lentswe Heavy Equipment" 
-              className="w-full h-auto object-contain will-change-transform"
+              className="w-full h-64 md:h-80 lg:h-96 object-cover will-change-transform"
               style={{ 
-                maxHeight: '500px',
                 imageRendering: 'crisp-edges',
                 transform: 'translateZ(0)',
               }}
@@ -331,14 +330,13 @@ const Index = () => {
             ))}
           </div>
 
-          {/* Image Divider - Clean, full view */}
-          <div className="rounded-2xl overflow-hidden shadow-xl border border-border/50 mb-12 bg-muted/30">
+          {/* Image Divider - Full coverage within card bounds */}
+          <div className="rounded-2xl overflow-hidden shadow-xl border border-border/50 mb-12">
             <img 
               src={machinery11} 
               alt="Lentswe Fleet" 
-              className="w-full h-auto object-contain will-change-transform"
+              className="w-full h-64 md:h-80 lg:h-96 object-cover will-change-transform"
               style={{ 
-                maxHeight: '500px',
                 imageRendering: 'crisp-edges',
                 transform: 'translateZ(0)',
               }}
