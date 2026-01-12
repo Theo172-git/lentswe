@@ -71,11 +71,11 @@ const About = () => {
           </div>
 
           {/* Image Divider */}
-          <div className="rounded-3xl overflow-hidden shadow-card border border-border mb-16 bg-muted">
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border mb-16">
             <img 
               src={machinery5} 
               alt="Lentswe Heavy Machinery Operations" 
-              className="w-full h-auto max-h-96 object-contain"
+              className="w-full h-64 md:h-80 lg:h-96 object-cover"
             />
           </div>
 
@@ -137,11 +137,11 @@ const About = () => {
           </div>
 
           {/* Bottom Image */}
-          <div className="rounded-3xl overflow-hidden shadow-card border border-border bg-muted">
+          <div className="rounded-3xl overflow-hidden shadow-card border border-border">
             <img 
               src={machinery8} 
               alt="Lentswe Team at Work" 
-              className="w-full h-auto max-h-80 object-contain"
+              className="w-full h-64 md:h-80 object-cover"
             />
           </div>
         </div>

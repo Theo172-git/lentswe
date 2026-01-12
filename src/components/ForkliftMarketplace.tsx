@@ -333,12 +333,12 @@ Thank you!`;
                   key={product.id}
                   className="group bg-card rounded-2xl sm:rounded-3xl border-2 border-border overflow-hidden hover:shadow-2xl hover:border-primary/40 transition-all duration-500 hover:-translate-y-2"
                 >
-                  {/* Enhanced Image - High quality, no blur */}
-                  <div className="relative aspect-[4/3] overflow-hidden bg-muted/20">
+                  {/* Enhanced Image - High quality, fills card */}
+                  <div className="relative h-48 sm:h-56 lg:h-64 overflow-hidden">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-contain bg-muted/10 group-hover:scale-103 transition-transform duration-500 will-change-transform"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
                       style={{ 
                         imageRendering: 'crisp-edges',
                         transform: 'translateZ(0)',
