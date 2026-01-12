@@ -57,7 +57,7 @@ const Team = () => {
             <img 
               src={teamPhoto} 
               alt="Lentswe Team" 
-              className="w-full h-auto max-h-[500px] object-contain bg-muted"
+              className="w-full h-64 md:h-80 lg:h-96 object-cover"
             />
           </div>
         </div>

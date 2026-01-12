@@ -9,9 +9,10 @@ import { toast } from "sonner";
 import { 
   LogOut, Users, Package, AlertTriangle, MessageSquare, 
   ArrowLeft, Loader2, CheckCircle, XCircle, Clock, Eye, 
-  Forklift, Plus, Edit, Trash2, Save, X, FolderTree, FileText
+  Forklift, Plus, Edit, Trash2, Save, X, FolderTree, FileText, LayoutTemplate
 } from "lucide-react";
 import { CMSPanel } from "@/components/cms";
+import { PageBuilder } from "@/components/page-builder";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import {
@@ -110,7 +111,7 @@ const Admin = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<"cms" | "categories" | "forklifts" | "users" | "rentals" | "breakdowns" | "support">("cms");
+  const [activeTab, setActiveTab] = useState<"page-builder" | "cms" | "categories" | "forklifts" | "users" | "rentals" | "breakdowns" | "support">("page-builder");
   
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [rentals, setRentals] = useState<Rental[]>([]);
@@ -536,6 +537,7 @@ const Admin = () => {
           {/* Tabs */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
             {[
+              { key: "page-builder", label: "Page Builder", icon: LayoutTemplate },
               { key: "cms", label: "CMS", icon: FileText },
               { key: "categories", label: "Categories", icon: FolderTree },
               { key: "forklifts", label: "Equipment", icon: Forklift },
@@ -560,6 +562,12 @@ const Admin = () => {
           </div>
 
           {/* Content */}
+          {activeTab === "page-builder" && (
+            <div className="bg-card rounded-2xl border border-border overflow-hidden">
+              <PageBuilder />
+            </div>
+          )}
+          
           {activeTab === "cms" && (
             <div className="bg-card rounded-2xl border border-border p-6">
               <CMSPanel />
