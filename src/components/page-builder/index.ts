@@ -5,5 +5,6 @@ export { BlockRenderer } from './BlockRenderer';
 export { BlockSettingsPanel } from './BlockSettingsPanel';
 export { AIAssistant } from './AIAssistant';
 export { PagesList } from './PagesList';
+export { PageTemplates, pageTemplates } from './PageTemplates';
 export { blockRegistry, getBlockCategories, searchBlocks } from './block-registry';
 export * from './types';

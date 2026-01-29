@@ -22,16 +22,18 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { 
   Plus, FileText, MoreVertical, Edit, Trash2, 
-  Globe, GlobeLock, ExternalLink, Loader2, Search
+  Globe, GlobeLock, ExternalLink, Loader2, Search, LayoutTemplate
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { PageTemplates, PageTemplate } from './PageTemplates';
+import { BlockInstance } from './types';
 
 interface PagesListProps {
   pages: BuilderPage[];
   loading: boolean;
   saving: boolean;
-  onCreatePage: (title: string, slug: string) => Promise<BuilderPage | null>;
+  onCreatePage: (title: string, slug: string, blocks?: BlockInstance[]) => Promise<BuilderPage | null>;
   onEditPage: (page: BuilderPage) => void;
   onDeletePage: (id: string) => Promise<boolean>;
   onPublishPage: (id: string) => Promise<boolean>;
@@ -48,20 +50,41 @@ export const PagesList: React.FC<PagesListProps> = ({
   onPublishPage,
   onUnpublishPage,
 }) => {
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<PageTemplate | null>(null);
   const [newPageTitle, setNewPageTitle] = useState('');
   const [newPageSlug, setNewPageSlug] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [deletePageId, setDeletePageId] = useState<string | null>(null);
 
+  const handleSelectTemplate = (template: PageTemplate) => {
+    setSelectedTemplate(template);
+    setShowTemplateSelector(false);
+    setShowCreateDialog(true);
+    // Pre-fill title based on template
+    if (template.id !== 'blank') {
+      const suggestedTitle = template.name.replace(' Page', '').replace('Modern ', '');
+      setNewPageTitle(suggestedTitle);
+      setNewPageSlug(generateSlug(suggestedTitle));
+    }
+  };
+
   const handleCreatePage = async () => {
     if (!newPageTitle.trim() || !newPageSlug.trim()) return;
     
-    const page = await onCreatePage(newPageTitle, newPageSlug);
+    // Generate blocks with unique IDs from template
+    const templateBlocks: BlockInstance[] = selectedTemplate?.blocks.map((block, index) => ({
+      ...block,
+      id: `block-${Date.now()}-${index}`,
+    })) || [];
+    
+    const page = await onCreatePage(newPageTitle, newPageSlug, templateBlocks);
     if (page) {
       setShowCreateDialog(false);
       setNewPageTitle('');
       setNewPageSlug('');
+      setSelectedTemplate(null);
       onEditPage(page);
     }
   };
@@ -93,10 +116,33 @@ export const PagesList: React.FC<PagesListProps> = ({
     }
   };
 
+  const handleCloseTemplateSelector = () => {
+    setShowTemplateSelector(false);
+  };
+
+  const handleOpenNewPage = () => {
+    setShowTemplateSelector(true);
+    setSelectedTemplate(null);
+    setNewPageTitle('');
+    setNewPageSlug('');
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
         <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  // Show template selector
+  if (showTemplateSelector) {
+    return (
+      <div className="p-6">
+        <PageTemplates 
+          onSelectTemplate={handleSelectTemplate}
+          onClose={handleCloseTemplateSelector}
+        />
       </div>
     );
   }
@@ -109,7 +155,7 @@ export const PagesList: React.FC<PagesListProps> = ({
           <h2 className="text-2xl font-bold">Pages</h2>
           <p className="text-muted-foreground">Create and manage your website pages</p>
         </div>
-        <Button onClick={() => setShowCreateDialog(true)}>
+        <Button onClick={handleOpenNewPage}>
           <Plus className="w-4 h-4 mr-2" />
           New Page
         </Button>
@@ -138,12 +184,12 @@ export const PagesList: React.FC<PagesListProps> = ({
           <p className="text-muted-foreground mb-4 max-w-sm">
             {searchQuery 
               ? 'Try a different search term'
-              : 'Create your first page to start building your website'}
+              : 'Create your first page using a template or start from scratch'}
           </p>
           {!searchQuery && (
-            <Button onClick={() => setShowCreateDialog(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Create Page
+            <Button onClick={handleOpenNewPage}>
+              <LayoutTemplate className="w-4 h-4 mr-2" />
+              Choose Template
             </Button>
           )}
         </div>
@@ -228,13 +274,15 @@ export const PagesList: React.FC<PagesListProps> = ({
         </div>
       )}
 
-      {/* Create Page Dialog */}
+      {/* Create Page Dialog (after template selection) */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create New Page</DialogTitle>
             <DialogDescription>
-              Give your page a title and URL slug
+              {selectedTemplate && selectedTemplate.id !== 'blank' 
+                ? `Using "${selectedTemplate.name}" template with ${selectedTemplate.blocks.length} blocks`
+                : 'Start with a blank page'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -259,10 +307,25 @@ export const PagesList: React.FC<PagesListProps> = ({
                 />
               </div>
             </div>
+            {selectedTemplate && selectedTemplate.id !== 'blank' && (
+              <div className="pt-2">
+                <p className="text-sm text-muted-foreground">Template includes:</p>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {selectedTemplate.blocks.map((block, idx) => (
+                    <Badge key={idx} variant="outline" className="text-xs">
+                      {block.type}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
-              Cancel
+            <Button variant="outline" onClick={() => {
+              setShowCreateDialog(false);
+              setShowTemplateSelector(true);
+            }}>
+              Back to Templates
             </Button>
             <Button 
               onClick={handleCreatePage}
