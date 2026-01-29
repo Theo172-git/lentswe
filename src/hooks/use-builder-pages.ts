@@ -49,17 +49,19 @@ export const useBuilderPages = () => {
     fetchPages();
   }, [fetchPages]);
 
-  const createPage = async (title: string, slug: string): Promise<BuilderPage | null> => {
+  const createPage = async (title: string, slug: string, initialBlocks?: BlockInstance[]): Promise<BuilderPage | null> => {
     try {
       setSaving(true);
       const { data: userData } = await supabase.auth.getUser();
+      
+      const blocksToSave = initialBlocks || [];
       
       const { data, error } = await supabase
         .from('builder_pages')
         .insert({
           title,
           slug,
-          blocks: [],
+          blocks: blocksToSave as unknown as any,
           created_by: userData.user?.id
         })
         .select()
@@ -69,7 +71,7 @@ export const useBuilderPages = () => {
 
       const newPage: BuilderPage = {
         ...data,
-        blocks: []
+        blocks: blocksToSave
       };
 
       setPages(prev => [newPage, ...prev]);
